@@ -1,5 +1,9 @@
 <?php
 require '../vendor/autoload.php';
+require '../session.php';
+require '../config.php';
+
+$session = new Session(CONFIG::APP_NAME, SCRIBBIT_PATH, CONFIG::USER, CONFIG::PASSWORD);
 
 // Prepare app
 $app = new \Slim\Slim(array(
@@ -26,11 +30,22 @@ $app->view->parserOptions = array(
 $app->view->parserExtensions = array(new \Slim\Views\TwigExtension());
 
 // Define routes
-$app->get('/', function () use ($app) {
-    // Sample log message
-    $app->log->info("Slim-Skeleton '/' route");
-    // Render index view
-    $app->render('index.html');
+$app->get('/', function () use ($app, $session) {
+    if($session->isAuthed()) {
+        $app->render('projects.html');
+    } else {
+        $app->render('login.html');
+    }
+});
+
+$app->post('/login', function () use ($app, $session) {
+    $username = $app->request->post('username');
+    $password = $app->request->post('password');
+    
+    if ($session->login($username, $password)) {
+        header('location: ./');
+        exit();
+    }
 });
 
 // Run app
