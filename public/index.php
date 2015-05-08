@@ -73,6 +73,28 @@ $app->post('/project', function () use ($app, $session) {
     exit();
 });
 
+$app->get('/project/:name', function ($name) use ($app, $session) {
+    if($session->isAuthed()) {
+        $ascii_name = iconv('UTF-8', 'ASCII//IGNORE', $name);
+        $dir_name = preg_replace('/\W+/', '-', $ascii_name);
+        
+        $files = array();
+        foreach (glob("../" . CONFIG::PROJECTS_PATH . "$dir_name/*") as $file) {
+            $files[date("F j Y H:i:s", filectime($file))] = file_get_contents($file);
+        }
+        
+        krsort($files);
+        
+        $app->render('project.html', array(
+            'scribbit' => $name,
+            'bits' => $files
+        ));
+    } else {
+        header('location: ./');
+        exit();
+    }
+});
+
 // Run app
 $app->run();
 
