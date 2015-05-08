@@ -9,7 +9,7 @@ class CONFIG
     const PASSWORD           = 'zipzap';
     const FILE_CREATION_MODE = 0777;
     const DATE_FORMAT        = 'j. F Y';
-    const PROJECTS_PATH      = 'scribbits/';
+    const PROJECTS_PATH      = 'scribbits/'; //use a trailing slash
     
     // Maximum width for Images. Beyond this, a scaled down version is created
     const IMAGE_BIG_PATH     = 'big/';
