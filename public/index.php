@@ -36,6 +36,9 @@ $app->get('/', function () use ($app, $session) {
         foreach (glob("../" . CONFIG::PROJECTS_PATH . "*", GLOB_ONLYDIR) as $dir) {
             $dirs[filectime($dir)] = basename($dir);
         }
+        
+        krsort($dirs);
+        
         $app->render('projects.html', array(
             'dirs' => $dirs
         ));
@@ -56,6 +59,16 @@ $app->post('/login', function () use ($app, $session) {
 
 $app->get('/logout', function () use ($app, $session) {
     $session->logout();
+    header('location: ./');
+    exit();
+});
+
+$app->post('/project', function () use ($app, $session) {
+    $ascii_name = iconv('UTF-8', 'ASCII//IGNORE', $app->request->post('name'));
+    $name = preg_replace('/\W+/', '-', $ascii_name);
+    
+    mkdir("../" . CONFIG::PROJECTS_PATH . $name);
+    
     header('location: ./');
     exit();
 });
