@@ -48,5 +48,11 @@ $app->post('/login', function () use ($app, $session) {
     }
 });
 
+$app->get('/logout', function () use ($app, $session) {
+    $session->logout();
+    header('location: ./');
+    exit();
+});
+
 // Run app
 $app->run();
