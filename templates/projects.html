@@ -1,16 +1,20 @@
 <!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
 <html>
     <head>
-        <title>Projects</title>
+        <title>Scribbits</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="css/site.css">
     </head>
     <body>
-        <div>List of existing projects goes here.</div>
+        <div id="addProject"></div>
+        <form class="addProjectForm">
+            <div><input name="name" id="newProject" placeholder="Project name:" type="text"></div>
+            <div><button type="submit" id="np">+</button></div>
+        </form>
+        
+        {% for dir in dirs %}
+        <a href="/project/{{dir}}"><div>{{ dir }}</div></a>
+        {% endfor %}
     </body>
 </html>

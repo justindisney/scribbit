@@ -32,7 +32,13 @@ $app->view->parserExtensions = array(new \Slim\Views\TwigExtension());
 // Define routes
 $app->get('/', function () use ($app, $session) {
     if($session->isAuthed()) {
-        $app->render('projects.html');
+        $dirs = array();
+        foreach (glob("../" . CONFIG::PROJECTS_PATH . "*", GLOB_ONLYDIR) as $dir) {
+            $dirs[filectime($dir)] = basename($dir);
+        }
+        $app->render('projects.html', array(
+            'dirs' => $dirs
+        ));
     } else {
         $app->render('login.html');
     }
@@ -56,3 +62,5 @@ $app->get('/logout', function () use ($app, $session) {
 
 // Run app
 $app->run();
+
+
