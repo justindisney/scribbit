@@ -6,3 +6,5 @@
 .DS_STORE
 composer.lock
 /README.md
+/scribbits/*
+!/scribbits/.gitkeep
