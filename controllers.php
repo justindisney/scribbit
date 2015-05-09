@@ -1,12 +1,13 @@
 <?php
 
 abstract class Controller {
-
     protected $app;
-    protected $service;
+    protected $model;
+    protected $session;
 
     public function __construct(Pimple $di) {
         $this->app = $di['app'];
+        $this->session = $di['session'];
         $this->init($di);
     }
 
@@ -14,13 +15,8 @@ abstract class Controller {
 }
 
 class AuthenticationController extends Controller {
-    protected $session;
+    public function init(Pimple $di) {}
     
-    public function init(Pimple $di) {
-        $this->app = $di['app'];
-        $this->session = $di['session'];
-    }
-
     public function login() {
         $username = $this->app->request->post('username');
         $password = $this->app->request->post('password');
@@ -40,12 +36,8 @@ class AuthenticationController extends Controller {
 }
 
 class ScribbitController extends Controller {
-    protected $session;
-    
     public function init(Pimple $di) {
-        $this->app = $di['app'];
-        $this->session = $di['session'];
-        $this->service = $di['ScribbitService'];
+        $this->model = $di['ScribbitModel'];
     }
     
     public function find($name) {
@@ -85,7 +77,7 @@ class ScribbitController extends Controller {
     public function all() {
         if($this->session->isAuthed()) {
             $this->app->render('projects.html', array(
-                'dirs' => $this->service->all()
+                'dirs' => $this->model->all()
             ));
         } else {
             $this->app->render('login.html');
@@ -95,24 +87,11 @@ class ScribbitController extends Controller {
 }
 
 class BitController extends Controller {
-    protected $session;
-    
     public function init(Pimple $di) {
-        $this->app = $di['app'];
-        $this->session = $di['session'];
-        $this->service = $di['ScribbitService'];
+        $this->model = $di['BitModel'];
     }
 
     public function create() {
-        if($this->session->isAuthed()) {
-            $ascii_name = iconv('UTF-8', 'ASCII//IGNORE', $this->app->request->post('name'));
-            $name = preg_replace('/\W+/', '-', $ascii_name);
-
-            mkdir("../" . CONFIG::PROJECTS_PATH . $name);
-        }
-        
-        $this->app->redirect('/');
-        
         if($this->session->isAuthed()) {
             $bit_name = time() . '-' . substr(md5(uniqid(rand(), true)),0, 8) . '.md';
             $path = "../" . CONFIG::PROJECTS_PATH . $this->app->request->post('scribbit') . "/$bit_name";

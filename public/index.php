@@ -3,7 +3,7 @@ require '../vendor/autoload.php';
 require '../session.php';
 require '../config.php';
 require '../controllers.php';
-require '../services.php';
+require '../models.php';
 
 $session = new Session(CONFIG::APP_NAME, SCRIBBIT_PATH, CONFIG::USER, CONFIG::PASSWORD);
 
@@ -43,8 +43,16 @@ $pimple['ScribbitController'] = $pimple->share(function ($pimple) {
     return new ScribbitController($pimple);
 });
 
-$pimple['ScribbitService'] = $pimple->share(function ($pimple) {
-    return new ScribbitService($pimple);
+$pimple['ScribbitModel'] = $pimple->share(function ($pimple) {
+    return new ScribbitModel($pimple);
+});
+
+$pimple['BitController'] = $pimple->share(function ($pimple) {
+    return new BitController($pimple);
+});
+
+$pimple['BitModel'] = $pimple->share(function ($pimple) {
+    return new BitModel($pimple);
 });
 
 // Define routes
@@ -96,21 +104,5 @@ $app->group('/bit', function () use ($pimple) {
     });
 });
 
-$app->post('/bit', function () use ($app, $session) {
-    if(!$session->isAuthed()) {
-        header('location: ./');
-        exit();
-    }
-    
-    $bit_name = time() . '-' . substr(md5(uniqid(rand(), true)),0, 8) . '.md';
-    
-    file_put_contents("../" . CONFIG::PROJECTS_PATH . $app->request->post('scribbit') . "/$bit_name", $app->request->post('bit'));
-    
-    header('location: /project/' . $app->request->post('scribbit'));
-    exit();
-});
-
 // Run app
 $app->run();
-
-
