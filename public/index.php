@@ -64,10 +64,12 @@ $app->get('/logout', function () use ($app, $session) {
 });
 
 $app->post('/project', function () use ($app, $session) {
-    $ascii_name = iconv('UTF-8', 'ASCII//IGNORE', $app->request->post('name'));
-    $name = preg_replace('/\W+/', '-', $ascii_name);
-    
-    mkdir("../" . CONFIG::PROJECTS_PATH . $name);
+    if($session->isAuthed()) {
+        $ascii_name = iconv('UTF-8', 'ASCII//IGNORE', $app->request->post('name'));
+        $name = preg_replace('/\W+/', '-', $ascii_name);
+
+        mkdir("../" . CONFIG::PROJECTS_PATH . $name);
+    }
     
     header('location: ./');
     exit();
@@ -80,7 +82,9 @@ $app->get('/project/:name', function ($name) use ($app, $session) {
         
         $files = array();
         foreach (glob("../" . CONFIG::PROJECTS_PATH . "$dir_name/*") as $file) {
-            $files[date("F j Y H:i:s", filectime($file))] = file_get_contents($file);
+            $d = date("F j Y H:i:s", filectime($file));
+            $files[$d]['contents'] = file_get_contents($file);
+            $files[$d]['name'] = basename($file);
         }
         
         krsort($files);
@@ -93,6 +97,20 @@ $app->get('/project/:name', function ($name) use ($app, $session) {
         header('location: ./');
         exit();
     }
+});
+
+$app->post('/bit', function () use ($app, $session) {
+    if(!$session->isAuthed()) {
+        header('location: ./');
+        exit();
+    }
+    
+    $bit_name = time() . '-' . substr(md5(uniqid(rand(), true)),0, 8) . '.md';
+    
+    file_put_contents("../" . CONFIG::PROJECTS_PATH . $app->request->post('scribbit') . "/$bit_name", $app->request->post('bit'));
+    
+    header('location: /project/' . $app->request->post('scribbit'));
+    exit();
 });
 
 // Run app

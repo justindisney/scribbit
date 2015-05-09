@@ -15,9 +15,9 @@
         </form>
         
         {% for date, bit in bits %}
-        <div>
+        <div data-bit-name="{{bit.name}}">
             <p>{{date}}</p>
-            <p>{{bit}}</p>
+            <p>{{bit.contents}}</p>
         </div>
         {% endfor %}
     </body>
