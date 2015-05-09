@@ -1,25 +1,16 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>{{scribbit}}</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" type="text/css" href="/css/site.css">
-    </head>
-    <body>
-        <h1><a href="/"><</a> {{scribbit}}</h1>
-        <div id="addBit"></div>
-        <form action="/bit" method="post">
-            <input type="hidden" name="scribbit" value="{{scribbit}}">
-            <div><textarea name="bit" id="newBit" placeholder="start writing markdown here" type="text"></textarea></div>
-            <div><button type="submit" id="np">+</button></div>
-        </form>
-        
-        {% for date, bit in bits %}
-        <div data-bit-name="{{bit.name}}">
-            <p>{{date}}</p>
-            <p>{{bit.contents}}</p>
-        </div>
-        {% endfor %}
-    </body>
-</html>
+{% include 'header.html' %}
+    <h1><a href="/"><</a> {{scribbit}}</h1>
+    <div id="addBit"></div>
+    <form action="/bit" method="post">
+        <input type="hidden" name="scribbit" value="{{scribbit}}">
+        <div><textarea name="bit" id="newBit" placeholder="start writing markdown here" type="text"></textarea></div>
+        <div><button type="submit" id="np">+</button></div>
+    </form>
+
+    {% for date, bit in bits %}
+    <div data-bit-name="{{bit.name}}">
+        <p>{{date}}</p>
+        <p>{{bit.contents}}</p>
+    </div>
+    {% endfor %}
+{% include 'footer.html' %}

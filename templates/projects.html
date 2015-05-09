@@ -1,20 +1,11 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Scribbits</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" type="text/css" href="/css/site.css">
-    </head>
-    <body>
-        <div id="addProject"></div>
-        <form action="/scribbit" method="post">
-            <div><input name="name" id="newProject" placeholder="Scribbit name:" type="text"></div>
-            <div><button type="submit" id="np">+</button></div>
-        </form>
-        
-        {% for dir in dirs %}
-        <a href="/scribbit/{{dir}}"><div>{{ dir }}</div></a>
-        {% endfor %}
-    </body>
-</html>
+{% include 'header.html' %}
+    <div id="newScribbit"></div>
+    <form action="/scribbit" method="post">
+        <div><input name="name" placeholder="Scribbit name:" type="text"></div>
+        <div><button type="submit">+</button></div>
+    </form>
+
+    {% for dir in dirs %}
+    <a href="/scribbit/{{dir}}"><div>{{ dir }}</div></a>
+    {% endfor %}
+{% include 'footer.html' %}

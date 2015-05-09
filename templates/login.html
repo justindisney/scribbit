@@ -1,16 +1,7 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Login</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" type="text/css" href="/css/site.css">
-    </head>
-    <body>
-        <form action="/login" method="post">
-            <input name="username" placeholder="Username:" type="text" autofocus="autofocus" autocapitalize="false"><br>
-            <input name="password" placeholder="Password:" type="password"><br>
-            <input value="Login" type="submit">
-        </form>
-    </body>
-</html>
+{% include 'header.html' %}
+    <form action="/login" method="post">
+        <input name="username" placeholder="Username:" type="text" autofocus="autofocus" autocapitalize="false"><br>
+        <input name="password" placeholder="Password:" type="password"><br>
+        <input value="Login" type="submit">
+    </form>
+{% include 'footer.html' %}
