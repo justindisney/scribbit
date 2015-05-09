@@ -8,13 +8,13 @@
     </head>
     <body>
         <div id="addProject"></div>
-        <form action="/project" method="post">
-            <div><input name="name" id="newProject" placeholder="Project name:" type="text"></div>
+        <form action="/scribbit" method="post">
+            <div><input name="name" id="newProject" placeholder="Scribbit name:" type="text"></div>
             <div><button type="submit" id="np">+</button></div>
         </form>
         
         {% for dir in dirs %}
-        <a href="/project/{{dir}}"><div>{{ dir }}</div></a>
+        <a href="/scribbit/{{dir}}"><div>{{ dir }}</div></a>
         {% endfor %}
     </body>
 </html>

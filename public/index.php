@@ -2,6 +2,8 @@
 require '../vendor/autoload.php';
 require '../session.php';
 require '../config.php';
+require '../controllers.php';
+require '../services.php';
 
 $session = new Session(CONFIG::APP_NAME, SCRIBBIT_PATH, CONFIG::USER, CONFIG::PASSWORD);
 
@@ -29,74 +31,69 @@ $app->view->parserOptions = array(
 );
 $app->view->parserExtensions = array(new \Slim\Views\TwigExtension());
 
+$pimple = new Pimple();
+$pimple['app'] = $app;
+$pimple['session'] = $session;
+
+$pimple['AuthenticationController'] = $pimple->share(function ($pimple) {
+    return new AuthenticationController($pimple);
+});
+
+$pimple['ScribbitController'] = $pimple->share(function ($pimple) {
+    return new ScribbitController($pimple);
+});
+
+$pimple['ScribbitService'] = $pimple->share(function ($pimple) {
+    return new ScribbitService($pimple);
+});
+
 // Define routes
-$app->get('/', function () use ($app, $session) {
-    if($session->isAuthed()) {
-        $dirs = array();
-        foreach (glob("../" . CONFIG::PROJECTS_PATH . "*", GLOB_ONLYDIR) as $dir) {
-            $dirs[filectime($dir)] = basename($dir);
-        }
-        
-        krsort($dirs);
-        
-        $app->render('projects.html', array(
-            'dirs' => $dirs
-        ));
-    } else {
-        $app->render('login.html');
-    }
+$app->get('/', function () use ($pimple) {
+    $pimple['ScribbitController']->all();
 });
 
-$app->post('/login', function () use ($app, $session) {
-    $username = $app->request->post('username');
-    $password = $app->request->post('password');
+$app->post('/login', function () use ($pimple) {
+    $pimple['AuthenticationController']->login();
+});
+
+$app->get('/logout', function () use ($pimple) {
+    $pimple['AuthenticationController']->logout();
+});
+
+$app->group('/scribbit', function () use ($pimple) {
+    $pimple['app']->get('/:name', function ($name) use ($pimple) {
+        $pimple['ScribbitController']->find($name);
+    });
     
-    if ($session->login($username, $password)) {
-        header('location: ./');
-        exit();
-    }
-});
-
-$app->get('/logout', function () use ($app, $session) {
-    $session->logout();
-    header('location: ./');
-    exit();
-});
-
-$app->post('/project', function () use ($app, $session) {
-    if($session->isAuthed()) {
-        $ascii_name = iconv('UTF-8', 'ASCII//IGNORE', $app->request->post('name'));
-        $name = preg_replace('/\W+/', '-', $ascii_name);
-
-        mkdir("../" . CONFIG::PROJECTS_PATH . $name);
-    }
+    $pimple['app']->post('', function () use ($pimple) {    
+        $pimple['ScribbitController']->create();
+    });
     
-    header('location: ./');
-    exit();
+    $pimple['app']->patch('/:name', function ($name) use ($pimple) {
+        $pimple['ScribbitController']->update($name);
+    });
+    
+    $pimple['app']->delete('/:name', function ($name) use ($pimple) {    
+        $pimple['ScribbitController']->delete($name);
+    });
 });
 
-$app->get('/project/:name', function ($name) use ($app, $session) {
-    if($session->isAuthed()) {
-        $ascii_name = iconv('UTF-8', 'ASCII//IGNORE', $name);
-        $dir_name = preg_replace('/\W+/', '-', $ascii_name);
-        
-        $files = array();
-        foreach (glob("../" . CONFIG::PROJECTS_PATH . "$dir_name/*") as $file) {
-            $d = date("F j Y H:i:s", filectime($file));
-            $files[$d]['contents'] = file_get_contents($file);
-            $files[$d]['name'] = basename($file);
-        }
-        
-        krsort($files);
-        
-        $app->render('project.html', array(
-            'scribbit' => $name,
-            'bits' => $files
-        ));
-    } else {
-        header('location: ./');
-        exit();
-    }
+$app->group('/bit', function () use ($pimple) {
+    $pimple['app']->get('/:id', function ($id) use ($pimple) {
+        $pimple['BitController']->find($id);
+    });
+    
+    $pimple['app']->post('', function () use ($pimple) {    
+        $pimple['BitController']->create();
+    });
+    
+    $pimple['app']->patch('/:id', function ($id) use ($pimple) {
+        $pimple['BitController']->update($id);
+    });
+    
+    $pimple['app']->delete('/:id', function ($id) use ($pimple) {    
+        $pimple['BitController']->delete($id);
+    });
 });
 
 $app->post('/bit', function () use ($app, $session) {
