@@ -7,7 +7,15 @@ $(document).ready(function () {
         pk: 1,
         url: '/scribbit',
         title: 'Enter username',
-        inputclass: 'input-lg'
+        inputclass: 'input-lg',
+        toggle:'manual'
+    });
+
+    $('a.btn.edit').click(function (e) {
+        e.stopPropagation();
+        var a = $(this).parents("li").find('h3 a');
+
+        $(a).editable('toggle');
     });
 
     $("li.scribbit .delete").click(function () {
@@ -23,5 +31,11 @@ $(document).ready(function () {
                 console.log(scribbit + ' delete failed');
             }
         });
+    });
+
+    var markdownConverter = new Showdown.converter();
+
+    $('#bit-editor').keyup(function () {
+        $('#bit-preview').html(markdownConverter.makeHtml($(this).val()));
     });
 });
