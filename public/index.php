@@ -74,10 +74,10 @@ $app->group('/scribbit', function () use ($pimple) {
     });
     
     $pimple['app']->post('', function () use ($pimple) {    
-        $pimple['ScribbitController']->create();
+        $pimple['ScribbitController']->post();
     });
     
-    $pimple['app']->patch('/:name', function ($name) use ($pimple) {
+    $pimple['app']->put('/:name', function ($name) use ($pimple) {
         $pimple['ScribbitController']->update($name);
     });
     
@@ -95,7 +95,7 @@ $app->group('/bit', function () use ($pimple) {
         $pimple['BitController']->create();
     });
     
-    $pimple['app']->patch('/:id', function ($id) use ($pimple) {
+    $pimple['app']->put('/:id', function ($id) use ($pimple) {
         $pimple['BitController']->update($id);
     });
     

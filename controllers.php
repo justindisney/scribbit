@@ -63,12 +63,17 @@ class ScribbitController extends Controller {
         }
     }
 
-    public function create() {
+    public function post() {
         if($this->session->isAuthed()) {
-            $ascii_name = iconv('UTF-8', 'ASCII//IGNORE', $this->app->request->post('name'));
-            $name = preg_replace('/\W+/', '-', $ascii_name);
-
-            mkdir("../" . CONFIG::PROJECTS_PATH . $name);
+            $this->model->create($this->app->request->post('scribbit'));
+        }
+        
+        $this->app->redirect('/');
+    }
+    
+    public function delete($name) {
+        if($this->session->isAuthed()) {
+            $this->model->delete($name);
         }
         
         $this->app->redirect('/');
@@ -77,10 +82,12 @@ class ScribbitController extends Controller {
     public function all() {
         if($this->session->isAuthed()) {
             $this->app->render('projects.html', array(
-                'dirs' => $this->model->all()
+                'scribbits' => $this->model->all()
             ));
         } else {
-            $this->app->render('login.html');
+            $this->app->render('login.html', array(
+                'hideLogout' => true
+            ));
         }
     }
 
