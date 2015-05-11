@@ -6,7 +6,8 @@ $(document).ready(function () {
         type: 'text',
         pk: 1,
         url: '/scribbit',
-        title: 'Enter username'
+        title: 'Enter username',
+        inputclass: 'input-lg'
     });
 
     $("li.scribbit .delete").click(function () {
