@@ -12,7 +12,7 @@ $app = new \Slim\Slim(array(
     'templates.path' => '../templates',
 ));
 
-// Create monolog logger and store logger in container as singleton 
+// Create monolog logger and store logger in container as singleton
 // (Singleton resources retrieve the same log resource definition each time)
 $app->container->singleton('log', function () {
     $log = new \Monolog\Logger('slim-skeleton');
@@ -72,17 +72,24 @@ $app->group('/scribbit', function () use ($pimple) {
     $pimple['app']->get('/:name', function ($name) use ($pimple) {
         $pimple['ScribbitController']->find($name);
     });
-    
-    $pimple['app']->post('', function () use ($pimple) {    
+
+    $pimple['app']->get('/download/:name', function ($name) use ($pimple) {
+        $pimple['ScribbitController']->download($name);
+    });
+
+    $pimple['app']->post('', function () use ($pimple) {
         $pimple['ScribbitController']->post();
+        $this->app->redirect('/');
     });
-    
-    $pimple['app']->put('/:name', function ($name) use ($pimple) {
-        $pimple['ScribbitController']->update($name);
+
+    $pimple['app']->put('/', function () use ($pimple) {
+        $pimple['ScribbitController']->put();
+        $this->app->redirect('/');
     });
-    
-    $pimple['app']->delete('/:name', function ($name) use ($pimple) {    
+
+    $pimple['app']->delete('/:name', function ($name) use ($pimple) {
         $pimple['ScribbitController']->delete($name);
+        $this->app->redirect('/');
     });
 });
 
@@ -90,16 +97,16 @@ $app->group('/bit', function () use ($pimple) {
     $pimple['app']->get('/:id', function ($id) use ($pimple) {
         $pimple['BitController']->find($id);
     });
-    
-    $pimple['app']->post('', function () use ($pimple) {    
+
+    $pimple['app']->post('', function () use ($pimple) {
         $pimple['BitController']->create();
     });
-    
+
     $pimple['app']->put('/:id', function ($id) use ($pimple) {
         $pimple['BitController']->update($id);
     });
-    
-    $pimple['app']->delete('/:id', function ($id) use ($pimple) {    
+
+    $pimple['app']->delete('/:id', function ($id) use ($pimple) {
         $pimple['BitController']->delete($id);
     });
 });
