@@ -2,29 +2,30 @@
 <div class="container">
     <div class="row">
         <div class="col-md-4 col-md-offset-4 col-lg-6 col-lg-offset-3">
-<!--            <div id="newScribbit"></div>-->
             <form action="/scribbit" method="post">
-                <div><input name="scribbit" placeholder="Scribbit name:" type="text"></div>
-                <div><button type="submit">+</button></div>
+                <div class="input-group">
+                    <input name="scribbit" type="text" class="form-control input-lg" placeholder="New Scribbit...">
+                    <span class="input-group-btn">
+                        <button class="btn btn-success btn-lg" type="button"><span class="glyphicon glyphicon-plus"></span></button>
+                    </span>
+                </div>
             </form>
 
-            <div class="center-block">
-                <button class="btn btn-primary btn-lg group-like-spacing new-scribbit"><span class="glyphicon glyphicon-plus"></span> New Scribbit</button>
-            </div>
-
+            <p>&nbsp;</p>
+            
             <ul class="list-unstyled list-group">
                 {% for scribbit in scribbits %}
-                <li class="spelling-list list-group-item clearfix scribbit" data-scribbit="{{scribbit.name}}">
+                <li class="list-group-item clearfix scribbit" data-scribbit="{{scribbit.name}}">
                     <h3 class="pull-left">
                         <a href="/scribbit/{{scribbit.name}}">{{scribbit.display_name}}</a><br>
                         <small class="text-muted">{{scribbit.bit_count}}
-                        {% if scribbit.bit_count == 1 %} Bit {% else %} Bits {% endif %}
+                            {% if scribbit.bit_count == 1 %} Bit {% else %} Bits {% endif %}
                         </small>
                     </h3>
                     <div class="btn-group pull-right" role="group">
-                        <button class="btn btn-link btn-lg edit" rel="tooltip" title="edit"><span class="glyphicon glyphicon-edit"></span></button>
-                        <button class="btn btn-link btn-lg download" rel="tooltip" title="download"><span class="glyphicon glyphicon-download"></span></button>
-                        <button class="btn btn-link btn-lg delete" rel="tooltip" title="delete" data-toggle="modal" data-target="#deleteModal"><span class="glyphicon glyphicon-remove"></span></button>
+                        <button class="btn btn-link btn-lg edit" rel="tooltip" title="edit"><span class="glyphicon glyphicon-xl glyphicon-edit"></span></button>
+                        <button class="btn btn-link btn-lg download" rel="tooltip" title="download"><span class="glyphicon glyphicon-xl glyphicon-download"></span></button>
+                        <button class="btn btn-link btn-lg delete" rel="tooltip" title="delete" data-toggle="modal" data-target="#deleteModal"><span class="glyphicon glyphicon-xl glyphicon-remove"></span></button>
                     </div>
                 </li>
                 {% endfor %}
