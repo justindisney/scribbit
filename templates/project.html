@@ -1,22 +1,16 @@
 {% include 'header.html' %}
-<div class="container">
-    <div class="row">
-        <div class="col-md-4 col-md-offset-4 col-lg-6 col-lg-offset-3">
-            <h1><a href="/"><span class="glyphicon glyphicon-triangle-left"></span> {{scribbit}}</a></h1>
-            <div id="addBit"></div>
-            <form action="/bit" method="post">
-                <input type="hidden" name="scribbit" value="{{scribbit}}">
-                <div><textarea name="bit" id="newBit" placeholder="start writing markdown here" type="text"></textarea></div>
-                <div><button type="submit" id="np">+</button></div>
-            </form>
+<h1><a href="/"><span class="glyphicon glyphicon-triangle-left"></span> {{scribbit}}</a></h1>
+<div id="addBit"></div>
+<form action="/bit" method="post">
+    <input type="hidden" name="scribbit" value="{{scribbit}}">
+    <div><textarea name="bit" id="newBit" placeholder="start writing markdown here" type="text"></textarea></div>
+    <div><button type="submit" id="np">+</button></div>
+</form>
 
-            {% for date, bit in bits %}
-            <div data-bit-name="{{bit.name}}">
-                <p>{{date}}</p>
-                <p>{{bit.contents}}</p>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
+{% for date, bit in bits %}
+<div data-bit-name="{{bit.name}}">
+    <p>{{date}}</p>
+    <p>{{bit.contents}}</p>
 </div>
+{% endfor %}
 {% include 'footer.html' %}
