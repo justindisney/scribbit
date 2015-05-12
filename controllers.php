@@ -80,7 +80,7 @@ class ScribbitController extends Controller
             $this->model->download($name);
         }
     }
-    
+
     public function post()
     {
         if ($this->session->isAuthed()) {
@@ -136,8 +136,6 @@ class BitController extends Controller
             file_put_contents($path, $this->app->request->post('bit'));
 
             $this->app->redirect('/scribbit/' . $this->app->request->post('scribbit'));
-        } else {
-            $this->app->redirect('/');
         }
     }
 

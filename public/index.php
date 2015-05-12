@@ -79,17 +79,17 @@ $app->group('/scribbit', function () use ($pimple) {
 
     $pimple['app']->post('', function () use ($pimple) {
         $pimple['ScribbitController']->post();
-        $this->app->redirect('/');
+        $pimple['app']->redirect('/'); // this does a GET request...
     });
 
     $pimple['app']->put('/', function () use ($pimple) {
         $pimple['ScribbitController']->put();
-        $this->app->redirect('/');
+//        $pimple['app']->redirect('/');  // this does a PUT request; why?
     });
 
     $pimple['app']->delete('/:name', function ($name) use ($pimple) {
         $pimple['ScribbitController']->delete($name);
-        $this->app->redirect('/');
+//        $pimple['app']->redirect('/'); // this does a DELETE request; why?
     });
 });
 
@@ -100,6 +100,7 @@ $app->group('/bit', function () use ($pimple) {
 
     $pimple['app']->post('', function () use ($pimple) {
         $pimple['BitController']->create();
+//        $pimple['app']->redirect('/scribbit/' . $pimple['app']->request-post('scribbit'));
     });
 
     $pimple['app']->put('/:id', function ($id) use ($pimple) {

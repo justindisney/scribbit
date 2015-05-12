@@ -1,10 +1,24 @@
 {% include 'header.html' %}
-<h1><a href="/"><span class="glyphicon glyphicon-triangle-left"></span> {{scribbit}}</a></h1>
-<div id="addBit"></div>
+<h1><a href="/"><span class="glyphicon glyphicon-lg glyphicon-triangle-left"></span> {{scribbit}}</a></h1>
+
 <form action="/bit" method="post">
     <input type="hidden" name="scribbit" value="{{scribbit}}">
-    <div><textarea name="bit" id="newBit" placeholder="start writing markdown here" type="text"></textarea></div>
-    <div><button type="submit" id="np">+</button></div>
+    <div class="row">
+        <div class="col-sm-12 col-lg-6">
+            <textarea id="bit-editor" name="bit" class="form-control input-lg" placeholder="start writing markdown here" ></textarea>
+        </div>
+        <div class="col-sm-12 col-lg-6">
+            <div class="panel panel-default">
+                <div id="bit-preview" class="panel-body"></div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-lg-2 col-lg-offset-5">
+            <button class="btn btn-link btn-lg" type="submit"><span class="glyphicon glyphicon-xl glyphicon-ok"></span></button>
+            <button class="btn btn-link btn-lg" type="cancel"><span class="glyphicon glyphicon-xl glyphicon-remove"></span></button>
+        </div>
+    </div>
 </form>
 
 {% for date, bit in bits %}

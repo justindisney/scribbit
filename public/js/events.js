@@ -44,5 +44,6 @@ $(document).ready(function () {
 
     $('#bit-editor').keyup(function () {
         $('#bit-preview').html(markdownConverter.makeHtml($(this).val()));
+        $(this).autosize();
     });
 });
