@@ -1,3 +1,14 @@
+.row.no-gutter {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.row.no-gutter [class*='col-']:not(:first-child),
+.row.no-gutter [class*='col-']:not(:last-child) {
+    padding-right: 0;
+    padding-left: 0;
+}
+
 .glyphicon-xl {
     font-size: x-large;
 }
@@ -8,4 +19,17 @@ li.scribbit h3 {
 
 li.scribbit h3 a.edit {
     padding-left: 12px;
+}
+
+#bit-editor{
+    width:99%;
+    min-height:100px;
+}
+
+#bit-preview{
+    background-color: #eee;
+    border: 1px solid #ddd;
+    min-height:100px;
+    padding-left: 3px;
+    border-radius: 2px;
 }

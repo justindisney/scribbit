@@ -8,7 +8,7 @@ $(document).ready(function () {
         url: '/scribbit',
         title: 'Enter username',
         inputclass: 'input-lg',
-        toggle:'manual'
+        toggle: 'manual'
     });
 
     $('li.scribbit h3 a.edit').click(function (e) {
@@ -19,8 +19,8 @@ $(document).ready(function () {
         $(this).hide();
     });
 
-    $('.editable').on('hidden', function(e, reason) {
-        if(reason === 'save' || reason === 'cancel') {
+    $('.editable').on('hidden', function (e, reason) {
+        if (reason === 'save' || reason === 'cancel') {
             $('a.edit').show();
         }
     });
@@ -42,8 +42,17 @@ $(document).ready(function () {
 
     var markdownConverter = new Showdown.converter();
 
+    var editor = ace.edit("bit-editor");
+    editor.setTheme("ace/theme/tomorrow");
+    editor.getSession().setMode("ace/mode/markdown");
+
     $('#bit-editor').keyup(function () {
-        $('#bit-preview').html(markdownConverter.makeHtml($(this).val()));
-        $(this).autosize();
+        $('#bit-preview').html(markdownConverter.makeHtml(editor.getValue()));
+    });
+
+    $('#bit-editor').keyup();
+
+    $('.markdown').each(function () {
+        $(this).html(markdownConverter.makeHtml($(this).data('source')));
     });
 });

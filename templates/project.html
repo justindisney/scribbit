@@ -1,16 +1,15 @@
 {% include 'header.html' %}
-<h1><a href="/"><span class="glyphicon glyphicon-lg glyphicon-triangle-left"></span> {{scribbit}}</a></h1>
+<h1><a href="/"><span class="glyphicon glyphicon-triangle-left"></span> {{scribbit}}</a></h1>
 
 <form action="/bit" method="post">
     <input type="hidden" name="scribbit" value="{{scribbit}}">
-    <div class="row">
+    <input type="hidden" name="bit" id="bit-name" value="">
+    <div class="row no-gutter">
         <div class="col-sm-12 col-lg-6">
-            <textarea id="bit-editor" name="bit" class="form-control input-lg" placeholder="start writing markdown here" ></textarea>
+            <div id="bit-editor">Write some **markdown** here...</div>
         </div>
         <div class="col-sm-12 col-lg-6">
-            <div class="panel panel-default">
-                <div id="bit-preview" class="panel-body"></div>
-            </div>
+            <div id="bit-preview"></div>
         </div>
     </div>
     <div class="row">
@@ -22,9 +21,17 @@
 </form>
 
 {% for date, bit in bits %}
-<div data-bit-name="{{bit.name}}">
-    <p>{{date}}</p>
-    <p>{{bit.contents}}</p>
+<div class="panel panel-default" data-bit-name="{{bit.name}}">
+    <div class="panel-heading">
+        <p class="panel-title pull-left"><span class="muted">{{date}}</span></p>
+        <div class="btn-group pull-right" role="group">
+            <a href="#" class="btn btn-link btn-lg edit" rel="tooltip" title="edit"><span class="glyphicon glyphicon-xl glyphicon-edit"></span></a>
+            <a href="/bit/download/{{bit.name}}" class="btn btn-link btn-lg download" rel="tooltip" title="download"><span class="glyphicon glyphicon-xl glyphicon-download"></span></a>
+            <button class="btn btn-link btn-lg delete" rel="tooltip" title="delete" data-toggle="modal" data-target="#deleteModal"><span class="glyphicon glyphicon-xl glyphicon-remove"></span></button>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="panel-body markdown" data-source="{{bit.contents}}"></div>
 </div>
 {% endfor %}
 {% include 'footer.html' %}
