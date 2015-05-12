@@ -5,3 +5,7 @@
 li.scribbit h3 {
     margin-top: 10px;
 }
+
+li.scribbit h3 a.edit {
+    padding-left: 12px;
+}

@@ -11,11 +11,18 @@ $(document).ready(function () {
         toggle:'manual'
     });
 
-    $('a.btn.edit').click(function (e) {
+    $('li.scribbit h3 a.edit').click(function (e) {
         e.stopPropagation();
-        var a = $(this).parents("li").find('h3 a');
+        var a = $(this).parents("li").find('h3 a').not(".edit");
 
         $(a).editable('toggle');
+        $(this).hide();
+    });
+
+    $('.editable').on('hidden', function(e, reason) {
+        if(reason === 'save' || reason === 'cancel') {
+            $('a.edit').show();
+        }
     });
 
     $("li.scribbit .delete").click(function () {
