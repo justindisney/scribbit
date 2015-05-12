@@ -58,7 +58,7 @@ class ScribbitController extends Controller
 
             $files = array();
             foreach (glob("../" . CONFIG::PROJECTS_PATH . "$dir_name/*") as $file) {
-                $d                     = date("F j Y H:i:s", filectime($file));
+                $d                     = date("Y-m-d H:i:s", filectime($file));
                 $files[$d]['contents'] = file_get_contents($file);
                 $files[$d]['name']     = basename($file);
             }
