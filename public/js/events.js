@@ -6,7 +6,7 @@ $(document).ready(function () {
         type: 'text',
         pk: 1,
         url: '/scribbit',
-        title: 'Enter username',
+        title: 'Enter new name',
         inputclass: 'input-lg',
         toggle: 'manual'
     });
@@ -26,16 +26,20 @@ $(document).ready(function () {
     });
 
     $("li.scribbit .delete").click(function () {
-        var scribbit = $(this).parents("li").data("scribbit");
+        bootbox.confirm("Delete this entire scribbit?", function (result) {
+            if (result) {
+                var scribbit = $(this).parents("li").data("scribbit");
 
-        $.ajax({
-            type: 'DELETE',
-            url: '/scribbit/' + scribbit,
-            success: function (data, textStatus, jqXHR) {
-                window.location.assign("/");
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log(scribbit + ' delete failed');
+                $.ajax({
+                    type: 'DELETE',
+                    url: '/scribbit/' + scribbit,
+                    success: function (data, textStatus, jqXHR) {
+                        window.location.assign("/");
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log(scribbit + ' delete failed');
+                    }
+                });
             }
         });
     });
@@ -99,22 +103,26 @@ $(document).ready(function () {
     });
 
     $("div.bit .delete").click(function () {
-        var bitPanel = $(this).parents("div.panel");
-        var scribbit = bitPanel.data("scribbit");
-        var bit = bitPanel.data("bit");
+        bootbox.confirm("Delete this bit?", function (result) {
+            if (result) {
+                var bitPanel = $(this).parents("div.panel");
+                var scribbit = bitPanel.data("scribbit");
+                var bit = bitPanel.data("bit");
 
-        $.ajax({
-            type: 'DELETE',
-            url: '/bit',
-            data: {
-                bit: bit,
-                scribbit: scribbit
-            },
-            success: function (data, textStatus, jqXHR) {
-                bitPanel.remove();
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log(bit + ' delete failed');
+                $.ajax({
+                    type: 'DELETE',
+                    url: '/bit',
+                    data: {
+                        bit: bit,
+                        scribbit: scribbit
+                    },
+                    success: function (data, textStatus, jqXHR) {
+                        bitPanel.remove();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log(bit + ' delete failed');
+                    }
+                });
             }
         });
     });
