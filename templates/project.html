@@ -1,6 +1,6 @@
 {% include 'header.html' %}
 <h1><a href="/"><span class="glyphicon glyphicon-triangle-left"></span> {{scribbit}}</a></h1>
-
+<p>&nbsp;</p>
 <input type="hidden" name="scribbit" id="scribbit" value="{{scribbit}}">
 <input type="hidden" name="bit" id="bit" value="">
 <div class="row no-gutter">
@@ -20,7 +20,7 @@
 
 {% for date, bit in bits %}
 <div class="panel panel-default" data-bit="{{bit.name}}" data-scribbit="{{scribbit}}">
-    <div class="panel-heading">
+    <div class="panel-heading custom">
         <h3 class="pull-left">{{date}}</h3>
         <div class="btn-group pull-right bit" role="group">
             <a href="#" class="btn btn-link btn-lg edit" rel="tooltip" title="edit"><span class="glyphicon glyphicon-xl glyphicon-edit"></span></a>
