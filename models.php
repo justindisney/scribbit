@@ -70,7 +70,7 @@ class ScribbitModel
         $ascii_name = iconv('UTF-8', 'ASCII//IGNORE', $new);
         $name       = preg_replace('/\W+/', '_-_', $ascii_name);
 
-        rename("../" . CONFIG::SCRIBBITS_DIRECTORY . $old, "../" . CONFIG::PROJECTS_PATH . $name);
+        rename("../" . CONFIG::SCRIBBITS_DIRECTORY . $old, "../" . CONFIG::SCRIBBITS_DIRECTORY . $name);
     }
 
     public function delete($scribbit)
