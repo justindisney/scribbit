@@ -20,12 +20,14 @@ class ScribbitModel
     public function all()
     {
         $scribbits = array();
-        $path      = "../" . CONFIG::PROJECTS_PATH;
+        $path      = "../" . CONFIG::SCRIBBITS_DIRECTORY;
         foreach (glob($path . "*", GLOB_ONLYDIR) as $scribbit) {
-            $t                             = filectime($scribbit);
-            $scribbits[$t]['name']         = basename($scribbit);
-            $scribbits[$t]['display_name'] = preg_replace('/_-_/', ' ', basename($scribbit));
-            $scribbits[$t]['bit_count']    = $this->getBitCount($path . "/$scribbit/*");
+            if (basename($scribbit) != CONFIG::LOST_AND_FOUND) {
+                $t                             = filectime($scribbit);
+                $scribbits[$t]['name']         = basename($scribbit);
+                $scribbits[$t]['display_name'] = preg_replace('/_-_/', ' ', basename($scribbit));
+                $scribbits[$t]['bit_count']    = $this->getBitCount($path . "/$scribbit/*");
+            }
         }
 
         krsort($scribbits);
@@ -35,7 +37,7 @@ class ScribbitModel
 
     public function download($name)
     {
-        $path = "../" . CONFIG::PROJECTS_PATH . $name;
+        $path    = "../" . CONFIG::SCRIBBITS_DIRECTORY . $name;
         $zipPath = sys_get_temp_dir() . "/$name.zip";
 
         $zip = new ZipArchive;
@@ -60,7 +62,7 @@ class ScribbitModel
         $ascii_name = iconv('UTF-8', 'ASCII//IGNORE', $scribbit);
         $name       = preg_replace('/\W+/', '_-_', $ascii_name);
 
-        mkdir("../" . CONFIG::PROJECTS_PATH . $name);
+        mkdir("../" . CONFIG::SCRIBBITS_DIRECTORY . $name);
     }
 
     public function update($old, $new)
@@ -68,12 +70,12 @@ class ScribbitModel
         $ascii_name = iconv('UTF-8', 'ASCII//IGNORE', $new);
         $name       = preg_replace('/\W+/', '_-_', $ascii_name);
 
-        rename("../" . CONFIG::PROJECTS_PATH . $old, "../" . CONFIG::PROJECTS_PATH . $name);
+        rename("../" . CONFIG::SCRIBBITS_DIRECTORY . $old, "../" . CONFIG::PROJECTS_PATH . $name);
     }
 
     public function delete($scribbit)
     {
-        $path = "../" . CONFIG::PROJECTS_PATH . $scribbit;
+        $path = "../" . CONFIG::SCRIBBITS_DIRECTORY . $scribbit;
 
         foreach ($this->getBits("$path/" . $this->fileGlob) as $bit) {
             if (unlink($bit)) {
@@ -90,5 +92,60 @@ class ScribbitModel
 
 class BitModel
 {
+    protected $absolutePath;
+    protected $content;
+    protected $filename;
+    protected $scribbit;
+
+    public function __construct($params = array())
+    {
+        if (isset($params['filename'])) {
+            $this->filename = $params['filename'];
+        } else {
+            $this->filename = time() . '-' . substr(md5(uniqid(rand(), true)), 0, 8) . '.md';
+        }
+
+        if (isset($params['scribbit'])) {
+            $this->scribbit = $params['scribbit'];
+        } else {
+            $this->scribbit = CONFIG::LOST_AND_FOUND;
+        }
+
+        $this->absolutePath = APP_PATH . CONFIG::SCRIBBITS_DIRECTORY . $this->scribbit . "/" . $this->filename;
+    }
+
+    public function getFileName()
+    {
+        return $this->filename;
+    }
+
+    public function setContent($content)
+    {
+        $this->content = $content;
+    }
+
+    public function saveContent()
+    {
+        file_put_contents($this->absolutePath, $this->content);
+    }
+
+    public function download()
+    {
+        $zipPath = sys_get_temp_dir() . "/" . $this->filename . ".zip";
+
+        $zip = new ZipArchive;
+        if ($zip->open($zipPath, ZipArchive::CREATE)) {
+            $zip->addFile($this->absolutePath, $this->filename);
+            $zip->close();
+            return $zipPath;
+        }
+
+        return false;
+    }
+
+    public function delete()
+    {
+        unlink($this->absolutePath);
+    }
 
 }

@@ -5,7 +5,7 @@ require '../config.php';
 require '../controllers.php';
 require '../models.php';
 
-$session = new Session(CONFIG::APP_NAME, SCRIBBIT_PATH, CONFIG::USER, CONFIG::PASSWORD);
+$session = new Session(CONFIG::APP_NAME, APP_PATH, CONFIG::USER, CONFIG::PASSWORD);
 
 // Prepare app
 $app = new \Slim\Slim(array(
@@ -89,26 +89,24 @@ $app->group('/scribbit', function () use ($pimple) {
 
     $pimple['app']->delete('/:name', function ($name) use ($pimple) {
         $pimple['ScribbitController']->delete($name);
-//        $pimple['app']->redirect('/'); // this does a DELETE request; why?
     });
 });
 
 $app->group('/bit', function () use ($pimple) {
-    $pimple['app']->get('/:id', function ($id) use ($pimple) {
-        $pimple['BitController']->find($id);
+    $pimple['app']->get('/download/:scribbit/:bit', function ($scribbit, $bit) use ($pimple) {
+        $pimple['BitController']->download($scribbit, $bit);
     });
 
     $pimple['app']->post('', function () use ($pimple) {
-        $pimple['BitController']->create();
-//        $pimple['app']->redirect('/scribbit/' . $pimple['app']->request-post('scribbit'));
+        $pimple['BitController']->post();
     });
 
-    $pimple['app']->put('/:id', function ($id) use ($pimple) {
-        $pimple['BitController']->update($id);
+    $pimple['app']->put('', function () use ($pimple) {
+        $pimple['BitController']->put();
     });
 
-    $pimple['app']->delete('/:id', function ($id) use ($pimple) {
-        $pimple['BitController']->delete($id);
+    $pimple['app']->delete('', function () use ($pimple) {
+        $pimple['BitController']->delete();
     });
 });
 

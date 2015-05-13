@@ -57,7 +57,7 @@ class ScribbitController extends Controller
             $dir_name   = preg_replace('/\W+/', '-', $ascii_name);
 
             $files = array();
-            foreach (glob("../" . CONFIG::PROJECTS_PATH . "$dir_name/*") as $file) {
+            foreach (glob("../" . CONFIG::SCRIBBITS_DIRECTORY . "$dir_name/*") as $file) {
                 $d                     = date("Y-m-d H:i:s", filectime($file));
                 $files[$d]['contents'] = file_get_contents($file);
                 $files[$d]['name']     = basename($file);
@@ -124,18 +124,69 @@ class BitController extends Controller
 {
     public function init(Pimple $di)
     {
-        $this->model = $di['BitModel'];
+
     }
 
-    public function create()
+    public function post()
     {
         if ($this->session->isAuthed()) {
-            $bit_name = time() . '-' . substr(md5(uniqid(rand(), true)), 0, 8) . '.md';
-            $path     = "../" . CONFIG::PROJECTS_PATH . $this->app->request->post('scribbit') . "/$bit_name";
+            $bit = new BitModel(array(
+                'scribbit' => $this->app->request->post('scribbit')
+            ));
 
-            file_put_contents($path, $this->app->request->post('bit'));
+            $bit->setContent($this->app->request->post('content'));
+            $bit->saveContent();
 
-            $this->app->redirect('/scribbit/' . $this->app->request->post('scribbit'));
+            return $bit->getFileName();
+        }
+    }
+
+    public function put()
+    {
+        if ($this->session->isAuthed()) {
+            $bit = new BitModel(array(
+                'scribbit' => $this->app->request->put('scribbit'),
+                'filename' => $this->app->request->put('bit')
+            ));
+
+            $bit->setContent($this->app->request->put('content'));
+            $bit->saveContent();
+
+            return $bit->getFileName();
+        }
+    }
+
+    public function download($scribbit, $filename)
+    {
+        if ($this->session->isAuthed()) {
+            $bit = new BitModel(array(
+                'scribbit' => $scribbit,
+                'filename' => $filename
+            ));
+
+            $zipFile = $bit->download();
+
+            if ($zipFile) {
+                header("Content-type: application/zip");
+                header("Content-Disposition: attachment; filename=$scribbit-$filename.zip");
+                header("Content-length: " . filesize($zipFile));
+                header("Pragma: no-cache");
+                header("Expires: 0");
+                readfile($zipFile);
+                unlink($zipFile);
+            }
+        }
+    }
+
+    public function delete()
+    {
+        if ($this->session->isAuthed()) {
+            $bit = new BitModel(array(
+                'scribbit' => $this->app->request->post('scribbit'),
+                'filename' => $this->app->request->post('bit')
+            ));
+
+            $bit->delete();
         }
     }
 
