@@ -8,7 +8,7 @@ class CONFIG
     const USER                = 'scribbit';
     const PASSWORD            = 'zipzap';
     const FILE_CREATION_MODE  = 0777;
-    const DATE_FORMAT         = 'j. F Y';
+    const DATE_FORMAT         = 'Y-m-d H:i:s';
     const SCRIBBITS_DIRECTORY = 'scribbits/'; //use a trailing slash
     const LOST_AND_FOUND      = '__lost+found';
 
