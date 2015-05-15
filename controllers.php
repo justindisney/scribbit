@@ -65,7 +65,7 @@ class ScribbitController extends Controller
 
             krsort($files);
 
-            $this->app->render('project.html', array(
+            $this->app->render('scribbit.twig', array(
                 'scribbit' => $name,
                 'bits'     => $files
             ));
@@ -108,11 +108,11 @@ class ScribbitController extends Controller
     public function all()
     {
         if ($this->session->isAuthed()) {
-            $this->app->render('projects.html', array(
+            $this->app->render('scribbits.twig', array(
                 'scribbits' => $this->model->all()
             ));
         } else {
-            $this->app->render('login.html', array(
+            $this->app->render('login.twig', array(
                 'hideLogout' => true
             ));
         }

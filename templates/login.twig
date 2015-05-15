@@ -1,7 +1,7 @@
-{% include 'header.html' %}
+{% include 'header.twig' %}
 <form action="{{urlFor('login')}}" method="post">
     <input name="username" class="form-control input-lg" placeholder="Username:" type="text" autofocus="autofocus" autocapitalize="false"><br>
     <input name="password" class="form-control input-lg" placeholder="Password:" type="password"><br>
     <input value="Login" type="submit" class="btn btn-default btn-lg">
 </form>
-{% include 'footer.html' %}
+{% include 'footer.twig' %}

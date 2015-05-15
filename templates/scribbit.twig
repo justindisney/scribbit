@@ -1,4 +1,4 @@
-{% include 'header.html' %}
+{% include 'header.twig' %}
 <h1><a href="{{urlFor('home')}}"><span class="glyphicon glyphicon-triangle-left"></span> {{scribbit}}</a></h1>
 <p>&nbsp;</p>
 <input type="hidden" name="scribbit" id="scribbit" value="{{scribbit}}">
@@ -33,5 +33,5 @@
     <div class="panel-body markdown" data-source="{{bit.contents}}"></div>
 </div>
 {% endfor %}
-{% include 'modals.html' %}
-{% include 'footer.html' %}
+{% include 'modals.twig' %}
+{% include 'footer.twig' %}
