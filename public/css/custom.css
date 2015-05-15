@@ -1,3 +1,7 @@
+body {
+    background-color: #ccc;
+}
+
 .row.no-gutter {
     margin-left: 0;
     margin-right: 0;

@@ -46,14 +46,16 @@ $(document).ready(function () {
 
     var markdownConverter = new Showdown.converter();
 
-    var editor = ace.edit("bit-editor");
-    editor.setTheme("ace/theme/tomorrow");
-    editor.getSession().setMode("ace/mode/markdown");
-    editor.getSession().setUseWrapMode(true);
-    editor.setValue("Write some **markdown** here...");
-    editor.clearSelection();
-    editor.$blockScrolling = Infinity;
-    editor.focus();
+    if ($('#bit-editor').length) {
+        var editor = ace.edit("bit-editor");
+        editor.setTheme("ace/theme/tomorrow");
+        editor.getSession().setMode("ace/mode/markdown");
+        editor.getSession().setUseWrapMode(true);
+        editor.setValue("Write some **markdown** here...");
+        editor.clearSelection();
+        editor.$blockScrolling = Infinity;
+        editor.focus();
+    }
 
     $('#bit-editor').keyup(function () {
         $('#bit-preview').html(markdownConverter.makeHtml(editor.getValue()));
