@@ -1,5 +1,5 @@
 body {
-    background-color: #ccc;
+    background-color: #e9e2e4;
 }
 
 .row.no-gutter {
@@ -13,8 +13,13 @@ body {
     padding-left: 0;
 }
 
-.glyphicon-xl {
+.btn-lg {
     font-size: x-large;
+    line-height: 95%;
+}
+
+.logout {
+    font-size: 36px;
 }
 
 li.scribbit h3 {
@@ -29,6 +34,7 @@ li.scribbit h3 a.edit {
     width:99%;
     min-height:100px;
     font-size:1.4em;
+    border-radius: 10px;
 }
 
 #bit-preview{
@@ -36,12 +42,20 @@ li.scribbit h3 a.edit {
     border: 1px solid #ddd;
     min-height:100px;
     padding-left: 3px;
-    border-radius: 2px;
+    border-radius: 10px;
     font-size:1.4em;
+}
+
+.panel.custom {
+    border-radius: 10px;
 }
 
 .panel-heading.custom {
     padding: 0px 5px;
+    border: 0;
+    background-color: #fff;
+    background-image: none;
+    border-radius: 10px;
 }
 
 .panel-heading.custom h3 {
@@ -49,6 +63,11 @@ li.scribbit h3 a.edit {
     padding: 12px 0 5px 5px;
     color: #999;
     font-weight: 400;
+    font-size:1.3em;
+}
+
+.panel-heading.custom .btn-group {
+    margin-top: 5px;
 }
 
 .panel-body.markdown {
@@ -60,22 +79,22 @@ li.scribbit h3 a.edit {
 }
 
 .btn-circle {
-  width: 30px;
-  height: 30px;
-  text-align: center;
-  padding: 6px 0;
-  font-size: 12px;
-  line-height: 1.428571429;
-  border-radius: 50%;
-  margin: 0 18px;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    padding: 6px 0;
+    font-size: 12px;
+    line-height: 1.428571429;
+    border-radius: 50%;
+    margin: 0 18px;
 }
 
 .btn-circle.btn-xl {
-  width: 70px;
-  height: 70px;
-  padding: 10px 16px;
-  font-size: 30px;
-  font-weight: bolder;
-  line-height: 1.33;
-  border-radius: 35px;
+    width: 70px;
+    height: 70px;
+    padding: 10px 16px;
+    font-size: 30px;
+    font-weight: bolder;
+    line-height: 1.33;
+    border-radius: 35px;
 }

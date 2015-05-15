@@ -1,5 +1,5 @@
 {% include 'header.twig' %}
-<h1><a href="{{urlFor('home')}}"><span class="glyphicon glyphicon-triangle-left"></span> {{scribbit}}</a></h1>
+<h1><a href="{{urlFor('home')}}">&#9664; {{scribbit}}</a></h1>
 <p>&nbsp;</p>
 <input type="hidden" name="scribbit" id="scribbit" value="{{scribbit}}">
 <input type="hidden" name="bit" id="bit" value="">
@@ -20,13 +20,13 @@
 </div>
 
 {% for date, bit in bits %}
-<div class="panel panel-default" data-bit="{{bit.name}}" data-scribbit="{{scribbit}}">
+<div class="panel panel-default custom" data-bit="{{bit.name}}" data-scribbit="{{scribbit}}">
     <div class="panel-heading custom">
         <h3 class="pull-left">{{date}}</h3>
         <div class="btn-group pull-right bit" role="group">
-            <a href="#" class="btn btn-link btn-lg edit" rel="tooltip" title="edit"><span class="glyphicon glyphicon-xl glyphicon-edit"></span></a>
-            <a href="{{urlFor('bit-download', {'scribbit': scribbit, 'bit': bit.name})}}" class="btn btn-link btn-lg download" rel="tooltip" title="download"><span class="glyphicon glyphicon-xl glyphicon-download"></span></a>
-            <button class="btn btn-link btn-lg delete" title="delete"><span class="glyphicon glyphicon-xl glyphicon-remove"></span></button>
+            <a href="#" class="btn btn-default btn-lg edit" title="edit">&#9998;</a>
+            <a href="{{urlFor('bit-download', {'scribbit': scribbit, 'bit': bit.name})}}" class="btn btn-default btn-lg download" title="download">&#11015;</a>
+            <button class="btn btn-default btn-lg delete" title="delete">&#10006;</button>
         </div>
         <div class="clearfix"></div>
     </div>
