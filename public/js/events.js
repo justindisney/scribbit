@@ -5,7 +5,7 @@ $(document).ready(function () {
     $('li.scribbit h3 a').editable({
         type: 'text',
         pk: 1,
-        url: '/scribbit',
+        url: 'scribbit',
         title: 'Enter new name',
         inputclass: 'input-lg',
         toggle: 'manual'
@@ -32,9 +32,9 @@ $(document).ready(function () {
 
                 $.ajax({
                     type: 'DELETE',
-                    url: '/scribbit/' + scribbit,
+                    url: 'scribbit/' + scribbit,
                     success: function (data, textStatus, jqXHR) {
-                        window.location.assign("/");
+                        location.reload(true);
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         console.log(scribbit + ' delete failed');
@@ -87,7 +87,7 @@ $(document).ready(function () {
 
         $.ajax({
             type: requestType,
-            url: '/bit',
+            url: 'bit',
             data: {
                 bit: bit,
                 content: content,
