@@ -69,22 +69,21 @@ $app->get('/logout', function () use ($pimple) {
 })->name('logout');
 
 $app->group('/scribbit', function () use ($pimple) {
-    $pimple['app']->get('/:name', function ($name) use ($pimple) {
-        $pimple['ScribbitController']->find($name);
-    });
+    $pimple['app']->get('/:scribbit', function ($scribbit) use ($pimple) {
+        $pimple['ScribbitController']->find($scribbit);
+    })->name('scribbit-get');
 
-    $pimple['app']->get('/download/:name', function ($name) use ($pimple) {
-        $pimple['ScribbitController']->download($name);
-    });
+    $pimple['app']->get('/download/:scribbit', function ($scribbit) use ($pimple) {
+        $pimple['ScribbitController']->download($scribbit);
+    })->name('scribbit-download');
 
     $pimple['app']->post('', function () use ($pimple) {
         $pimple['ScribbitController']->post();
-        $pimple['app']->redirect('/'); // this does a GET request...
+        $pimple['app']->redirect($pimple['app']->urlFor('home')); // refresh the page
     });
 
     $pimple['app']->put('/', function () use ($pimple) {
         $pimple['ScribbitController']->put();
-//        $pimple['app']->redirect('/');  // this does a PUT request; why?
     });
 
     $pimple['app']->delete('/:name', function ($name) use ($pimple) {
@@ -95,7 +94,7 @@ $app->group('/scribbit', function () use ($pimple) {
 $app->group('/bit', function () use ($pimple) {
     $pimple['app']->get('/download/:scribbit/:bit', function ($scribbit, $bit) use ($pimple) {
         $pimple['BitController']->download($scribbit, $bit);
-    });
+    })->name('bit-download');
 
     $pimple['app']->post('', function () use ($pimple) {
         $pimple['BitController']->post();
