@@ -5,7 +5,7 @@ $(document).ready(function () {
     $('li.scribbit h3 a').editable({
         type: 'text',
         pk: 1,
-        url: 'scribbit',
+        url: baseUrl + '/scribbit',
         title: 'Enter new name',
         inputclass: 'input-lg',
         toggle: 'manual'
@@ -26,13 +26,13 @@ $(document).ready(function () {
     });
 
     $("li.scribbit .delete").click(function () {
+        var scribbit = $(this).parents("li").data("scribbit");
+
         bootbox.confirm("Delete this entire scribbit?", function (result) {
             if (result) {
-                var scribbit = $(this).parents("li").data("scribbit");
-
                 $.ajax({
                     type: 'DELETE',
-                    url: 'scribbit/' + scribbit,
+                    url: baseUrl + '/scribbit/' + scribbit,
                     success: function (data, textStatus, jqXHR) {
                         location.reload(true);
                     },
@@ -87,7 +87,7 @@ $(document).ready(function () {
 
         $.ajax({
             type: requestType,
-            url: 'bit',
+            url: baseUrl + '/bit',
             data: {
                 bit: bit,
                 content: content,
@@ -105,15 +105,15 @@ $(document).ready(function () {
     });
 
     $("div.bit .delete").click(function () {
+        var bitPanel = $(this).parents("div.panel");
+        var scribbit = bitPanel.data("scribbit");
+        var bit = bitPanel.data("bit");
+
         bootbox.confirm("Delete this bit?", function (result) {
             if (result) {
-                var bitPanel = $(this).parents("div.panel");
-                var scribbit = bitPanel.data("scribbit");
-                var bit = bitPanel.data("bit");
-
                 $.ajax({
                     type: 'DELETE',
-                    url: '/bit',
+                    url: baseUrl + '/bit',
                     data: {
                         bit: bit,
                         scribbit: scribbit
