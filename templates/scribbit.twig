@@ -1,5 +1,5 @@
 {% include 'header.html' %}
-<h1><a href="/"><span class="glyphicon glyphicon-triangle-left"></span> {{scribbit}}</a></h1>
+<h1><a href="{{urlFor('home')}}"><span class="glyphicon glyphicon-triangle-left"></span> {{scribbit}}</a></h1>
 <p>&nbsp;</p>
 <input type="hidden" name="scribbit" id="scribbit" value="{{scribbit}}">
 <input type="hidden" name="bit" id="bit" value="">
@@ -25,8 +25,8 @@
         <h3 class="pull-left">{{date}}</h3>
         <div class="btn-group pull-right bit" role="group">
             <a href="#" class="btn btn-link btn-lg edit" rel="tooltip" title="edit"><span class="glyphicon glyphicon-xl glyphicon-edit"></span></a>
-            <a href="/bit/download/{{scribbit}}/{{bit.name}}" class="btn btn-link btn-lg download" rel="tooltip" title="download"><span class="glyphicon glyphicon-xl glyphicon-download"></span></a>
-            <button class="btn btn-link btn-lg delete" rel="tooltip" title="delete" data-toggle="modal" data-target="#deleteModal"><span class="glyphicon glyphicon-xl glyphicon-remove"></span></button>
+            <a href="{{urlFor('bit-download', {'scribbit': scribbit, 'bit': bit.name})}}" class="btn btn-link btn-lg download" rel="tooltip" title="download"><span class="glyphicon glyphicon-xl glyphicon-download"></span></a>
+            <button class="btn btn-link btn-lg delete" title="delete"><span class="glyphicon glyphicon-xl glyphicon-remove"></span></button>
         </div>
         <div class="clearfix"></div>
     </div>

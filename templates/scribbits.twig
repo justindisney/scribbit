@@ -1,5 +1,5 @@
 {% include 'header.html' %}
-<form action="/scribbit" method="post">
+<form action="scribbit" method="post">
     <div class="input-group">
         <input name="scribbit" type="text" class="form-control input-lg" placeholder="New Scribbit...">
         <span class="input-group-btn">
@@ -14,7 +14,7 @@
     {% for scribbit in scribbits %}
     <li class="list-group-item clearfix scribbit" data-scribbit="{{scribbit.name}}">
         <h3 class="pull-left">
-            <a href="/scribbit/{{scribbit.name}}" data-pk="{{scribbit.name}}">{{scribbit.display_name}}</a>
+            <a href="{{urlFor('scribbit-get', {'scribbit': scribbit.name})}}" data-pk="{{scribbit.name}}">{{scribbit.display_name}}</a>
             <small><a href="#" class="edit" title="edit"><span class="glyphicon glyphicon-pencil"></span></a></small>
             <br>
             <small class="text-muted">
@@ -23,8 +23,8 @@
         </h3>
         <div class="btn-group pull-right" role="group">
             
-            <a href="/scribbit/download/{{scribbit.name}}" class="btn btn-link btn-lg download" rel="tooltip" title="download"><span class="glyphicon glyphicon-xl glyphicon-download"></span></a>
-            <button class="btn btn-link btn-lg delete" rel="tooltip" title="delete" data-toggle="modal" data-target="#deleteModal"><span class="glyphicon glyphicon-xl glyphicon-remove"></span></button>
+            <a href="{{urlFor('scribbit-download', {'scribbit': scribbit.name})}}" class="btn btn-link btn-lg download" rel="tooltip" title="download"><span class="glyphicon glyphicon-xl glyphicon-download"></span></a>
+            <button class="btn btn-link btn-lg delete" title="delete""><span class="glyphicon glyphicon-xl glyphicon-remove"></span></button>
         </div>
     </li>
     {% endfor %}
