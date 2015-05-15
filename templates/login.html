@@ -1,5 +1,5 @@
 {% include 'header.html' %}
-<form action="/login" method="post">
+<form action="{{urlFor('login')}}" method="post">
     <input name="username" class="form-control input-lg" placeholder="Username:" type="text" autofocus="autofocus" autocapitalize="false"><br>
     <input name="password" class="form-control input-lg" placeholder="Password:" type="password"><br>
     <input value="Login" type="submit" class="btn btn-default btn-lg">

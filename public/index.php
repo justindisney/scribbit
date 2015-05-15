@@ -58,15 +58,15 @@ $pimple['BitModel'] = $pimple->share(function ($pimple) {
 // Define routes
 $app->get('/', function () use ($pimple) {
     $pimple['ScribbitController']->all();
-});
+})->name('home');
 
 $app->post('/login', function () use ($pimple) {
     $pimple['AuthenticationController']->login();
-});
+})->name('login');
 
 $app->get('/logout', function () use ($pimple) {
     $pimple['AuthenticationController']->logout();
-});
+})->name('logout');
 
 $app->group('/scribbit', function () use ($pimple) {
     $pimple['app']->get('/:name', function ($name) use ($pimple) {
