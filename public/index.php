@@ -2,8 +2,9 @@
 require '../vendor/autoload.php';
 require '../session.php';
 require '../config.php';
-require '../controllers.php';
-require '../models.php';
+
+use \Controllers;
+use \Models;
 
 $session = new Session(CONFIG::APP_NAME, APP_PATH, CONFIG::USER, CONFIG::PASSWORD);
 
@@ -28,23 +29,23 @@ $pimple['app'] = $app;
 $pimple['session'] = $session;
 
 $pimple['AuthenticationController'] = $pimple->share(function ($pimple) {
-    return new AuthenticationController($pimple);
+    return new \Controllers\AuthenticationController($pimple);
 });
 
 $pimple['ScribbitController'] = $pimple->share(function ($pimple) {
-    return new ScribbitController($pimple);
+    return new \Controllers\ScribbitController($pimple);
 });
 
 $pimple['ScribbitModel'] = $pimple->share(function ($pimple) {
-    return new ScribbitModel($pimple);
+    return new \Models\ScribbitModel($pimple);
 });
 
 $pimple['BitController'] = $pimple->share(function ($pimple) {
-    return new BitController($pimple);
+    return new \Controllers\BitController($pimple);
 });
 
 $pimple['BitModel'] = $pimple->share(function ($pimple) {
-    return new BitModel($pimple);
+    return new \Models\BitModel($pimple);
 });
 
 // Define routes

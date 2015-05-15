@@ -1,7 +1,7 @@
 {
     "name": "slim/slim-skeleton",
     "description": "A Slim Framework skeleton application for rapid development",
-    "keywords": ["microframework","rest","router"],
+    "keywords": ["microframework", "rest", "router"],
     "homepage": "http://github.com/codeguy/Slim-Skeleton",
     "license": "MIT",
     "authors": [
@@ -17,5 +17,11 @@
         "slim/views": "^0.1.3",
         "twig/twig": "1.*",
         "pimple/pimple": "1.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Controllers": "lib",
+            "Models": "lib"
+        }
     }
 }
