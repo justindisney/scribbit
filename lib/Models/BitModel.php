@@ -3,6 +3,7 @@
 namespace Models;
 
 use CONFIG;
+use ZipArchive;
 
 class BitModel
 {
