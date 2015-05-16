@@ -10,5 +10,4 @@ else
 fi
 
 chmod -R 0777 scribbits/
-chmod -R 777 templates/
-chmod -R g+rwxs templates/cache/
+chmod -R 0777 templates/cache
