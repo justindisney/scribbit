@@ -30,7 +30,8 @@ class ScribbitController extends AbstractController
 
             $this->app->render('scribbit.twig', array(
                 'scribbit' => $name,
-                'bits'     => $files
+                'scribbit_display' => preg_replace('/_-_/', ' ', $name),
+                'bits' => $files
             ));
         } else {
             $this->app->redirect('/');
