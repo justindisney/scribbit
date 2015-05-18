@@ -17,7 +17,7 @@ $app = new \Slim\Slim(array(
 $app->view(new \Slim\Views\Twig());
 $app->view->parserOptions = array(
     'charset' => 'utf-8',
-    'cache' => realpath('../templates/cache'),
+    'cache' => false, //realpath('../templates/cache'),
     'auto_reload' => true,
     'strict_variables' => false,
     'autoescape' => true
