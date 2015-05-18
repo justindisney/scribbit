@@ -3,6 +3,10 @@ body {
     font-family: 'Palanquin', sans-serif;
 }
 
+a:hover {
+    text-decoration: none;
+}
+
 .row.no-gutter {
     margin-left: 0;
     margin-right: 0;
