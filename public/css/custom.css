@@ -1,5 +1,6 @@
 body {
     background-color: #e9e2e4;
+    font-family: 'Palanquin', sans-serif;
 }
 
 .row.no-gutter {
@@ -22,6 +23,11 @@ body {
     font-size: 36px;
 }
 
+.navbar-brand.custom {
+    font-family: 'Sonsie One', cursive;
+    font-size: 1.6em
+}
+
 li.scribbit h3 {
     margin-top: 10px;
 }
@@ -35,6 +41,7 @@ li.scribbit h3 a.edit {
     min-height:100px;
     font-size:1.4em;
     border-radius: 10px;
+    margin-bottom: 10px;
 }
 
 #bit-preview{
@@ -44,6 +51,7 @@ li.scribbit h3 a.edit {
     padding-left: 3px;
     border-radius: 10px;
     font-size:1.4em;
+    margin-bottom: 10px;
 }
 
 .panel.custom {
