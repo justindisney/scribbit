@@ -1,4 +1,4 @@
-$(document).ready(function () {
+$(document).ready(function() {
     $.fn.editable.defaults.mode = 'inline';
     $.fn.editable.defaults.ajaxOptions = {type: "PUT"};
 
@@ -8,10 +8,18 @@ $(document).ready(function () {
         url: baseUrl + '/scribbit',
         title: 'Enter new name',
         inputclass: 'input-lg',
-        toggle: 'manual'
+        toggle: 'manual',
+        success: function(response, newValue) {
+            $(this).parents("li").attr("data-scribbit", response);
+
+            var a = $(this).parents("li").find('h3 a').not(".edit");
+            var href = a.attr('href');
+            href.replace(/\/[^\/]+$/, response);
+            a.attr('href', href);
+        }
     });
 
-    $('li.scribbit h3 a.edit').click(function (e) {
+    $('li.scribbit h3 a.edit').click(function(e) {
         e.stopPropagation();
         var a = $(this).parents("li").find('h3 a').not(".edit");
 
@@ -19,24 +27,24 @@ $(document).ready(function () {
         $(this).hide();
     });
 
-    $('.editable').on('hidden', function (e, reason) {
+    $('.editable').on('hidden', function(e, reason) {
         if (reason === 'save' || reason === 'cancel') {
-            $('a.edit').show();
+            $('li.scribbit h3 a.edit').show();
         }
     });
 
-    $("li.scribbit .delete").click(function () {
+    $("li.scribbit .delete").click(function() {
         var scribbit = $(this).parents("li").data("scribbit");
 
-        bootbox.confirm("Delete this entire scribbit?", function (result) {
+        bootbox.confirm("Delete this entire scribbit?", function(result) {
             if (result) {
                 $.ajax({
                     type: 'DELETE',
                     url: baseUrl + '/scribbit/' + scribbit,
-                    success: function (data, textStatus, jqXHR) {
+                    success: function(data, textStatus, jqXHR) {
                         location.reload(true);
                     },
-                    error: function (jqXHR, textStatus, errorThrown) {
+                    error: function(jqXHR, textStatus, errorThrown) {
                         console.log(scribbit + ' delete failed');
                     }
                 });
@@ -57,24 +65,24 @@ $(document).ready(function () {
         editor.focus();
     }
 
-    $('#bit-editor').keyup(function () {
+    $('#bit-editor').keyup(function() {
         $('#bit-preview').html(markdownConverter.makeHtml(editor.getValue()));
     });
 
     $('#bit-editor').keyup();
 
-    $('.markdown').each(function () {
+    $('.markdown').each(function() {
         $(this).html(markdownConverter.makeHtml($(this).data('source')));
     });
 
-    $("div.editor-buttons button.cancel").click(function () {
+    $("div.editor-buttons button.cancel").click(function() {
         editor.setValue("Write some **markdown** here...");
         $('#bit-editor').keyup();
         editor.clearSelection();
         editor.focus();
     });
 
-    $("div.editor-buttons button.save").click(function () {
+    $("div.editor-buttons button.save").click(function() {
         var content = editor.getValue();
         var requestType = 'POST';
         var scribbit = $("#scribbit").val();
@@ -93,10 +101,10 @@ $(document).ready(function () {
                 content: content,
                 scribbit: scribbit
             },
-            success: function (data, textStatus, jqXHR) {
+            success: function(data, textStatus, jqXHR) {
                 location.reload(true);
             },
-            error: function (jqXHR, textStatus, errorThrown) {
+            error: function(jqXHR, textStatus, errorThrown) {
                 console.log(' create failed');
             }
         });
@@ -104,12 +112,12 @@ $(document).ready(function () {
         editor.focus();
     });
 
-    $("div.bit .delete").click(function () {
+    $("div.bit .delete").click(function() {
         var bitPanel = $(this).parents("div.panel");
         var scribbit = bitPanel.data("scribbit");
         var bit = bitPanel.data("bit");
 
-        bootbox.confirm("Delete this bit?", function (result) {
+        bootbox.confirm("Delete this bit?", function(result) {
             if (result) {
                 $.ajax({
                     type: 'DELETE',
@@ -118,10 +126,10 @@ $(document).ready(function () {
                         bit: bit,
                         scribbit: scribbit
                     },
-                    success: function (data, textStatus, jqXHR) {
+                    success: function(data, textStatus, jqXHR) {
                         bitPanel.remove();
                     },
-                    error: function (jqXHR, textStatus, errorThrown) {
+                    error: function(jqXHR, textStatus, errorThrown) {
                         console.log(bit + ' delete failed');
                     }
                 });
@@ -129,7 +137,7 @@ $(document).ready(function () {
         });
     });
 
-    $("div.bit .edit").click(function () {
+    $("div.bit .edit").click(function() {
         var bitPanel = $(this).parents("div.panel");
         var bit = bitPanel.data("bit");
         $("#bit").val(bit);
