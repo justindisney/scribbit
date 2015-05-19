@@ -59,9 +59,10 @@ class ScribbitController extends AbstractController
             $new = $this->app->request->put('value');
 
             $res = $this->model->update($old, $new);
-            
+
             if ($res !== false) {
-                echo $res;
+                $response = array ('old' => $old, 'new' => $res, 'display' => $new);
+                echo json_encode($response);
             }
         }
     }

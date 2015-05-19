@@ -21,9 +21,8 @@
             </small>
         </h3>
         <div class="btn-group pull-right" role="group">
-            
-            <a href="{{urlFor('scribbit-download', {'scribbit': scribbit.name})}}" class="btn btn-default btn-lg download" title="download">&#11015;</a>
-            <button class="btn btn-default btn-lg delete" title="delete"">&#10006;</button>
+            <button class="btn btn-default btn-lg download" title="download" data-url="{{urlFor('scribbit-download', {'scribbit': scribbit.name})}}" >&#11015;</button>
+            <button class="btn btn-default btn-lg delete" title="delete" data-url="{{urlFor('scribbit-delete', {'scribbit': scribbit.name})}}">&#10006;</button>
         </div>
     </li>
     {% endfor %}
