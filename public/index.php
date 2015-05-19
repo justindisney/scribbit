@@ -1,8 +1,8 @@
 <?php
 require '../vendor/autoload.php';
-require '../session.php';
-require '../config.php';
 
+use \Config;
+use \Session;
 use \Controllers;
 use \Models;
 
@@ -10,14 +10,14 @@ $session = new Session(CONFIG::APP_NAME, APP_PATH, CONFIG::USER, CONFIG::PASSWOR
 
 // Prepare app
 $app = new \Slim\Slim(array(
-    'templates.path' => '../templates',
+    'templates.path' => APP_PATH . 'templates',
 ));
 
 // Prepare view
 $app->view(new \Slim\Views\Twig());
 $app->view->parserOptions = array(
     'charset' => 'utf-8',
-    'cache' => false, //realpath('../templates/cache'),
+    'cache' => false, //realpath(APP_PATH . 'templates/cache'),
     'auto_reload' => true,
     'strict_variables' => false,
     'autoescape' => true

@@ -21,7 +21,9 @@
     "autoload": {
         "psr-0": {
             "Controllers": "lib",
-            "Models": "lib"
+            "Models": "lib",
+            "Session": "lib",
+            "Config": "lib"
         }
     }
 }
