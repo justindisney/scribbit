@@ -79,9 +79,9 @@ $app->group('/scribbit', function () use ($pimple) {
         $pimple['ScribbitController']->put();
     });
 
-    $pimple['app']->delete('/:name', function ($name) use ($pimple) {
-        $pimple['ScribbitController']->delete($name);
-    });
+    $pimple['app']->delete('/:scribbit', function ($scribbit) use ($pimple) {
+        $pimple['ScribbitController']->delete($scribbit);
+    })->name('scribbit-delete');
 });
 
 $app->group('/bit', function () use ($pimple) {
