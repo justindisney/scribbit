@@ -2,7 +2,7 @@
 
 namespace Models;
 
-use CONFIG;
+use Config;
 use ZipArchive;
 
 class BitModel
@@ -23,10 +23,11 @@ class BitModel
         if (isset($params['scribbit'])) {
             $this->scribbit = $params['scribbit'];
         } else {
-            $this->scribbit = CONFIG::LOST_AND_FOUND;
+            $this->scribbit = Config::LOST_AND_FOUND;
         }
 
-        $this->absolutePath = APP_PATH . CONFIG::SCRIBBITS_DIRECTORY . $this->scribbit . "/" . $this->filename;
+        $foo = APP_PATH;
+        $this->absolutePath = APP_PATH . Config::SCRIBBITS_DIRECTORY . $this->scribbit . "/" . $this->filename;
     }
 
     public function getFileName()

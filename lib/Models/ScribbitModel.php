@@ -2,7 +2,7 @@
 
 namespace Models;
 
-use CONFIG;
+use Config;
 use ZipArchive;
 
 class ScribbitModel
@@ -24,13 +24,13 @@ class ScribbitModel
     public function all()
     {
         $scribbits = array();
-        $path      = "../" . CONFIG::SCRIBBITS_DIRECTORY;
+        $path      = APP_PATH . Config::SCRIBBITS_DIRECTORY;
         foreach (glob($path . "*", GLOB_ONLYDIR) as $scribbit) {
-            if (basename($scribbit) != CONFIG::LOST_AND_FOUND) {
+            if (basename($scribbit) != Config::LOST_AND_FOUND) {
                 $t                             = filectime($scribbit);
                 $scribbits[$t]['name']         = basename($scribbit);
                 $scribbits[$t]['display_name'] = preg_replace('/_-_/', ' ', basename($scribbit));
-                $scribbits[$t]['bit_count']    = $this->getBitCount($path . "/$scribbit/*");
+                $scribbits[$t]['bit_count']    = $this->getBitCount("$scribbit/*");
             }
         }
 
@@ -41,7 +41,7 @@ class ScribbitModel
 
     public function download($name)
     {
-        $path    = "../" . CONFIG::SCRIBBITS_DIRECTORY . $name;
+        $path    = APP_PATH . Config::SCRIBBITS_DIRECTORY . $name;
         $zipPath = sys_get_temp_dir() . "/$name.zip";
 
         $zip = new ZipArchive;
@@ -66,7 +66,7 @@ class ScribbitModel
         $ascii_name = iconv('UTF-8', 'ASCII//IGNORE', $scribbit);
         $name       = preg_replace('/\W+/', '_-_', $ascii_name);
 
-        mkdir("../" . CONFIG::SCRIBBITS_DIRECTORY . $name);
+        mkdir(APP_PATH . Config::SCRIBBITS_DIRECTORY . $name);
     }
 
     public function update($old, $new)
@@ -74,7 +74,7 @@ class ScribbitModel
         $ascii_name = iconv('UTF-8', 'ASCII//IGNORE', $new);
         $name       = preg_replace('/\W+/', '_-_', $ascii_name);
 
-        if (rename("../" . CONFIG::SCRIBBITS_DIRECTORY . $old, "../" . CONFIG::SCRIBBITS_DIRECTORY . $name)) {
+        if (rename(APP_PATH . Config::SCRIBBITS_DIRECTORY . $old, APP_PATH . Config::SCRIBBITS_DIRECTORY . $name)) {
             return $name;
         } else {
             return false;
@@ -83,7 +83,7 @@ class ScribbitModel
 
     public function delete($scribbit)
     {
-        $path = "../" . CONFIG::SCRIBBITS_DIRECTORY . $scribbit;
+        $path = APP_PATH . Config::SCRIBBITS_DIRECTORY . $scribbit;
 
         foreach ($this->getBits("$path/" . $this->fileGlob) as $bit) {
             if (unlink($bit)) {

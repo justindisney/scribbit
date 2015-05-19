@@ -3,7 +3,6 @@
 namespace Controllers;
 
 use Controllers\AbstractController;
-use CONFIG;
 use Pimple;
 use Models\BitModel;
 

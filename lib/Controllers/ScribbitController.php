@@ -2,7 +2,7 @@
 
 namespace Controllers;
 
-use CONFIG;
+use Config;
 use Pimple;
 use Controllers\AbstractController;
 
@@ -20,8 +20,8 @@ class ScribbitController extends AbstractController
             $dir_name   = preg_replace('/\W+/', '-', $ascii_name);
 
             $files = array();
-            foreach (glob("../" . CONFIG::SCRIBBITS_DIRECTORY . "$dir_name/*") as $file) {
-                $d                     = date(CONFIG::DATE_FORMAT, filectime($file));
+            foreach (glob(APP_PATH . Config::SCRIBBITS_DIRECTORY . "$dir_name/*") as $file) {
+                $d                     = date(Config::DATE_FORMAT, filectime($file));
                 $files[$d]['contents'] = file_get_contents($file);
                 $files[$d]['name']     = basename($file);
             }
