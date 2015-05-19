@@ -17,7 +17,6 @@ $(document).ready(function () {
 
     $('li.scribbit h3 a').editable({
         type: 'text',
-        pk: 1,
         url: baseUrl + '/scribbit',
         title: 'Enter new name',
         inputclass: 'input-lg',
@@ -25,19 +24,17 @@ $(document).ready(function () {
         success: function (response, newValue) {
             var r = JSON.parse(response);
 
+            // Update links etc that depend on the scribbit name
+            $(this).editable('option', 'pk', r.new);
             $(this).parents("li").attr("data-scribbit", r.new);
 
             $(this).parents("li").find('a').each(function () {
                 $(this).attr("href", $(this).attr("href").replace(r.old, r.new));
-                $(this).data("pk", r.new)
             });
-//            
-//            $(this).parents("li").find('a:data(pk)').each(function () {
-//                $(this).data("pk", r.new);
-//            });
-            
-            $(this).parents("li").find('button:data(url)').each(function () {
-                $(this).data("url", $(this).data("url").replace(r.old, r.new));
+
+            $(this).parents("li").find('div.btn-group button').each(function () {
+                var newUrl = $(this).attr("data-url").replace(r.old, r.new);
+                $(this).attr("data-url", newUrl);
             });
         }
     });
@@ -57,11 +54,13 @@ $(document).ready(function () {
     });
 
     $("li.scribbit .download").click(function () {
-        window.location = $(this).data("url");
+        // $(this).data("url") doesn't return new value if data-url has changed
+        window.location = $(this).attr("data-url");
     });
 
     $("li.scribbit .delete").click(function () {
-        var url = $(this).data("url");
+        // $(this).data("url") doesn't return new value if data-url has changed
+        var url = $(this).attr("data-url");
 
         bootbox.confirm("Delete this entire scribbit?", function (result) {
             if (result) {
