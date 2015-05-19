@@ -1,3 +1,0 @@
-<?php
-/* Protect this directory */
-?>
