@@ -1,3 +1,16 @@
+$.extend( $.expr[ ":" ], {
+    data: $.expr.createPseudo ?
+        $.expr.createPseudo(function( dataName ) {
+            return function( elem ) {
+                return !!$.data( elem, dataName );
+            };
+        }) :
+        // support: jQuery <1.8
+        function( elem, i, match ) {
+            return !!$.data( elem, match[ 3 ] );
+        }
+});
+
 $(document).ready(function () {
     $.fn.editable.defaults.mode = 'inline';
     $.fn.editable.defaults.ajaxOptions = {type: "PUT"};
@@ -14,10 +27,18 @@ $(document).ready(function () {
 
             $(this).parents("li").attr("data-scribbit", r.new);
 
-            var a = $(this).parents("li").find('h3 a').not(".edit");
-            var href = a.attr('href');
-            href.replace(r.old, r.new);
-            a.attr('href', href);
+            $(this).parents("li").find('a').each(function () {
+                $(this).attr("href", $(this).attr("href").replace(r.old, r.new));
+                $(this).data("pk", r.new)
+            });
+//            
+//            $(this).parents("li").find('a:data(pk)').each(function () {
+//                $(this).data("pk", r.new);
+//            });
+            
+            $(this).parents("li").find('button:data(url)').each(function () {
+                $(this).data("url", $(this).data("url").replace(r.old, r.new));
+            });
         }
     });
 
