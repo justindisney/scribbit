@@ -139,19 +139,14 @@ $(document).ready(function () {
     });
 
     $("div.bit .delete").click(function () {
+        var url = $(this).data("url");
         var bitPanel = $(this).parents("div.panel");
-        var scribbit = bitPanel.data("scribbit");
-        var bit = bitPanel.data("bit");
 
         bootbox.confirm("Delete this bit?", function (result) {
             if (result) {
                 $.ajax({
                     type: 'DELETE',
-                    url: baseUrl + '/bit',
-                    data: {
-                        bit: bit,
-                        scribbit: scribbit
-                    },
+                    url: url,
                     success: function (data, textStatus, jqXHR) {
                         bitPanel.remove();
                     },
@@ -159,6 +154,22 @@ $(document).ready(function () {
                         console.log(bit + ' delete failed');
                     }
                 });
+            }
+        });
+    });
+    
+    $("div.bit .download").click(function () {
+        var url = $(this).data("url");
+        
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (data, textStatus, jqXHR) {
+                var foo = data;
+                window.location = $(this).data("url");
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(bit + ' download failed');
             }
         });
     });

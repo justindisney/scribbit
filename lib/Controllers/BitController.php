@@ -64,12 +64,12 @@ class BitController extends AbstractController
         }
     }
 
-    public function delete()
+    public function delete($scribbit, $filename)
     {
         if ($this->session->isAuthed()) {
             $bit = new BitModel(array(
-                'scribbit' => $this->app->request->post('scribbit'),
-                'filename' => $this->app->request->post('bit')
+                'scribbit' => $scribbit,
+                'filename' => $filename
             ));
 
             $bit->delete();

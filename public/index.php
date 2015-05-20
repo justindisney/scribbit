@@ -97,9 +97,9 @@ $app->group('/bit', function () use ($pimple) {
         $pimple['BitController']->put();
     });
 
-    $pimple['app']->delete('', function () use ($pimple) {
-        $pimple['BitController']->delete();
-    });
+    $pimple['app']->delete('/:scribbit/:bit', function ($scribbit, $bit) use ($pimple) {
+        $pimple['BitController']->delete($scribbit, $bit);
+    })->name('bit-delete');
 });
 
 // Run app

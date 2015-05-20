@@ -25,8 +25,8 @@
         <h3 class="pull-left">{{date}}</h3>
         <div class="btn-group pull-right bit" role="group">
             <a href="#" class="btn btn-default btn-lg edit" title="edit">&#9998;</a>
-            <a href="{{urlFor('bit-download', {'scribbit': scribbit, 'bit': bit.name})}}" class="btn btn-default btn-lg download" title="download">&#11015;</a>
-            <button class="btn btn-default btn-lg delete" title="delete">&#10006;</button>
+            <button class="btn btn-default btn-lg download" data-url="{{urlFor('bit-download', {'scribbit': scribbit, 'bit': bit.name})}}" title="download">&#11015;</a>
+            <button class="btn btn-default btn-lg delete" data-url="{{urlFor('bit-delete', {'scribbit': scribbit, 'bit': bit.name})}}" title="delete">&#10006;</button>
         </div>
         <div class="clearfix"></div>
     </div>
