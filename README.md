@@ -26,9 +26,9 @@ Installation is complete!
 
 ## Use the Application
 
-The simplest way to access the app is to go to `http://example.com/scribbit/public' in a browser.
+The simplest way to access the app is to go to http://example.com/scribbit/public in a browser.
 
-A more sophisticated method would be to set up a subdomain with its docroot set to `/path/to/my/scribbit/public`, then load `http://scribbit.example.com` in a browser.
+A more sophisticated method would be to set up a subdomain with its docroot set to `/path/to/my/scribbit/public`, then load http://scribbit.example.com in a browser.
 
 If installed correctly, a login screen should appear. Use the credentials that were set in `config.php` to login.
 
