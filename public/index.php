@@ -91,11 +91,11 @@ $app->group('/bit', function () use ($pimple) {
 
     $pimple['app']->post('', function () use ($pimple) {
         $pimple['BitController']->post();
-    });
+    })->name('bit-post');
 
     $pimple['app']->put('', function () use ($pimple) {
         $pimple['BitController']->put();
-    });
+    })->name('bit-put');
 
     $pimple['app']->delete('/:scribbit/:bit', function ($scribbit, $bit) use ($pimple) {
         $pimple['BitController']->delete($scribbit, $bit);

@@ -113,15 +113,17 @@ $(document).ready(function () {
         var requestType = 'POST';
         var scribbit = $("#scribbit").val();
         var bit = '';
+        var url = $(this).data("post-url");
 
         if ($("#bit").val()) {
             requestType = 'PUT';
             bit = $("#bit").val();
+            url = $(this).data("put-url");
         }
 
         $.ajax({
             type: requestType,
-            url: baseUrl + '/bit',
+            url: url,
             data: {
                 bit: bit,
                 content: content,
@@ -151,27 +153,15 @@ $(document).ready(function () {
                         bitPanel.remove();
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
-                        console.log(bit + ' delete failed');
+                        console.log(url + ': delete failed');
                     }
                 });
             }
         });
     });
-    
+
     $("div.bit .download").click(function () {
-        var url = $(this).data("url");
-        
-        $.ajax({
-            type: 'GET',
-            url: url,
-            success: function (data, textStatus, jqXHR) {
-                var foo = data;
-                window.location = $(this).data("url");
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log(bit + ' download failed');
-            }
-        });
+        window.location = $(this).data("url");
     });
 
     $("div.bit .edit").click(function () {
