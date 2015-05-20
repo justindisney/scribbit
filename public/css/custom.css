@@ -43,7 +43,8 @@ li.scribbit h3 a.edit {
 #bit-editor{
     width:99%;
     min-height:100px;
-    font-size:1.4em;
+    height:20vh;
+    font-size:1.35em;
     border-radius: 10px;
     margin-bottom: 10px;
 }
@@ -52,10 +53,10 @@ li.scribbit h3 a.edit {
     background-color: #eee;
     border: 1px solid #ddd;
     min-height:100px;
+    height:17vh;
     padding-left: 3px;
     border-radius: 10px;
-    font-size:1.4em;
-    margin-bottom: 10px;
+    font-size:1.25em;
 }
 
 .panel.custom {
