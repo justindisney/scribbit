@@ -1,14 +1,13 @@
 {
-    "name": "slim/slim-skeleton",
-    "description": "A Slim Framework skeleton application for rapid development",
-    "keywords": ["microframework", "rest", "router"],
-    "homepage": "http://github.com/codeguy/Slim-Skeleton",
+    "name": "justindisney/scribbit",
+    "description": "A tiny, self-hosted web app for tracking ideas and projects in markdown files",
+    "keywords": ["journal", "diary"],
+    "homepage": "https://github.com/justindisney/scribbit",
     "license": "MIT",
     "authors": [
         {
-            "name": "Josh Lockhart",
-            "email": "info@joshlockhart.com",
-            "homepage": "http://www.joshlockhart.com/"
+            "name": "Justin Disney",
+            "email": "justindisney@users.noreply.github.com"
         }
     ],
     "require": {

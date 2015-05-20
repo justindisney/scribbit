@@ -28,7 +28,7 @@ Installation is complete!
 
 The simplest way to access the app is to go to http://example.com/scribbit/public in a browser.
 
-A more sophisticated method would be to set up a subdomain with its docroot set to `/path/to/my/scribbit/public`, then load http://scribbit.example.com in a browser.
+A more sophisticated method would be to map a subdomain to `/path/to/my/scribbit/public`, then load http://scribbit.example.com in a browser.
 
 If installed correctly, a login screen should appear. Use the credentials that were set in `config.php` to login.
 
@@ -36,7 +36,7 @@ If installed correctly, a login screen should appear. Use the credentials that w
 
 At the moment, caching for the twig templates is disabled, due to the possibility that the cache files may not be removable from the command-line.
 
-File and image upload functionality is coming soon.
+File/image upload functionality is coming soon.
 
 ## How to Contribute
 
