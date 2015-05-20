@@ -7,7 +7,10 @@ It is a complete rewrite of the [nemex project](https://github.com/neonelephants
 
 Download the zip file:
 
-    curl -LOk https://github.com/justindisney/scribbit/archive/master.zip && unzip master.zip -d ./scribbit && rm master.zip
+    curl -LOk https://github.com/justindisney/scribbit/archive/master.zip 
+    unzip master.zip
+    mv scribbit-master scribbit
+    rm master.zip
 
 Or clone the repository:
 
