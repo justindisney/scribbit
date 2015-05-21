@@ -57,6 +57,7 @@ li.scribbit h3 a.edit {
     background-color: #eee;
     border: 1px solid #ddd;
     min-height:100px;
+    height:auto !important;
     height:17vh;
     padding-left: 3px;
     border-radius: 10px;
