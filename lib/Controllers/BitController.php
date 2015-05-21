@@ -52,7 +52,7 @@ class BitController extends AbstractController
 
             $zipFile = $bit->download();
 
-            if ($zipFile) {
+            if (file_exists($zipFile)) {
                 header("Content-type: application/zip");
                 header("Content-Disposition: attachment; filename=$scribbit-$filename.zip");
                 header("Content-length: " . filesize($zipFile));

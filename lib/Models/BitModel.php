@@ -11,6 +11,7 @@ class BitModel
     protected $content;
     protected $filename;
     protected $scribbit;
+    protected $scribbitPath;
 
     public function __construct($params = array())
     {
@@ -26,8 +27,8 @@ class BitModel
             $this->scribbit = Config::LOST_AND_FOUND;
         }
 
-        $foo = APP_PATH;
-        $this->absolutePath = APP_PATH . Config::SCRIBBITS_DIRECTORY . $this->scribbit . "/" . $this->filename;
+        $this->scribbitPath = APP_PATH . Config::SCRIBBITS_DIRECTORY . $this->scribbit . "/";
+        $this->absolutePath = $this->scribbitPath . $this->filename;
     }
 
     public function getFileName()
@@ -47,16 +48,21 @@ class BitModel
 
     public function download()
     {
-        $zipPath = sys_get_temp_dir() . "/" . $this->filename . ".zip";
+        $zipFile = $this->scribbitPath . $this->filename . ".zip";
 
         $zip = new ZipArchive;
-        if ($zip->open($zipPath, ZipArchive::CREATE)) {
+        if ($zip->open($zipFile, ZipArchive::CREATE)) {
             $zip->addFile($this->absolutePath, $this->filename);
             $zip->close();
-            return $zipPath;
+        } else {
+            return false;
         }
 
-        return false;
+        if (file_exists($zipFile)) {
+            return $zipFile;
+        } else {
+            return false;
+        }
     }
 
     public function delete()
