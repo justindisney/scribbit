@@ -42,22 +42,24 @@ class ScribbitModel
     public function download($name)
     {
         $path    = APP_PATH . Config::SCRIBBITS_DIRECTORY . $name;
-        $zipPath = sys_get_temp_dir() . "/$name.zip";
+        $zipFile = $path . "/$name.zip";
 
         $zip = new ZipArchive;
-        if ($zip->open($zipPath, ZipArchive::CREATE)) {
+        if ($zip->open($zipFile, ZipArchive::CREATE)) {
             foreach ($this->getBits("$path/" . $this->fileGlob) as $bit) {
                 $zip->addFile($bit, basename($bit));
             }
             $zip->close();
 
-            header("Content-type: application/zip");
-            header("Content-Disposition: attachment; filename=$name.zip");
-            header("Content-length: " . filesize($zipPath));
-            header("Pragma: no-cache");
-            header("Expires: 0");
-            readfile($zipPath);
-            unlink($zipPath);
+            if (file_exists($zipFile)) {
+                header("Content-type: application/zip");
+                header("Content-Disposition: attachment; filename=$name.zip");
+                header("Content-length: " . filesize($zipFile));
+                header("Pragma: no-cache");
+                header("Expires: 0");
+                readfile($zipFile);
+                unlink($zipFile);
+            }
         }
     }
 
