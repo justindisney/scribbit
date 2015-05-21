@@ -1,15 +1,29 @@
-$.extend( $.expr[ ":" ], {
-    data: $.expr.createPseudo ?
-        $.expr.createPseudo(function( dataName ) {
-            return function( elem ) {
-                return !!$.data( elem, dataName );
-            };
-        }) :
-        // support: jQuery <1.8
-        function( elem, i, match ) {
-            return !!$.data( elem, match[ 3 ] );
-        }
-});
+/*
+ * Source: https://github.com/evilstreak/markdown-js/blob/master/src/render_tree.js
+ */
+function escapeHTML(text) {
+    if (text && text.length > 0) {
+        return text.replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+    } else {
+        return "";
+    }
+}
+
+function unescapeHTML(text) {
+    if (text && text.length > 0) {
+        return text.replace(/&amp;/g, "&")
+                .replace(/&lt;/g, "<")
+                .replace(/&gt;/g, ">")
+                .replace(/&quot;/g, "\"")
+                .replace(/&#39;/g, "'");
+    } else {
+        return "";
+    }
+}
 
 $(document).ready(function () {
     $.fn.editable.defaults.mode = 'inline';
@@ -78,9 +92,9 @@ $(document).ready(function () {
         });
     });
 
-    var markdownConverter = new Showdown.converter();
-
     if ($('#bit-editor').length) {
+        var converter = new Showdown.converter();
+
         var editor = ace.edit("bit-editor");
         editor.setTheme("ace/theme/tomorrow");
         editor.getSession().setMode("ace/mode/markdown");
@@ -89,17 +103,17 @@ $(document).ready(function () {
         editor.clearSelection();
         editor.$blockScrolling = Infinity;
         editor.focus();
+
+        $('#bit-editor').keyup(function () {
+            $('#bit-preview').html(converter.makeHtml(escapeHTML(editor.getValue())));
+        });
+
+        $('#bit-editor').keyup();
+
+        $('.markdown').each(function () {
+            $(this).html(converter.makeHtml($(this).data('source')));
+        });
     }
-
-    $('#bit-editor').keyup(function () {
-        $('#bit-preview').html(markdownConverter.makeHtml(editor.getValue()));
-    });
-
-    $('#bit-editor').keyup();
-
-    $('.markdown').each(function () {
-        $(this).html(markdownConverter.makeHtml($(this).data('source')));
-    });
 
     $("div.editor-buttons button.cancel").click(function () {
         editor.setValue("Write some **markdown** here...");
@@ -170,7 +184,7 @@ $(document).ready(function () {
         $("#bit").val(bit);
 
         var source = bitPanel.find("div.markdown").data('source');
-        editor.setValue(source);
+        editor.setValue(unescapeHTML(source));
         $('#bit-editor').keyup();
         editor.clearSelection();
         editor.focus();
