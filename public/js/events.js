@@ -174,5 +174,6 @@ $(document).ready(function () {
         $('#bit-editor').keyup();
         editor.clearSelection();
         editor.focus();
+        editor.gotoLine(editor.session.doc.getAllLines().length);
     });
 });
