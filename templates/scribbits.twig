@@ -1,12 +1,14 @@
 {% include 'header.twig' %}
+<h1>
 <form action="scribbit" method="post">
     <div class="input-group">
         <input name="scribbit" type="text" class="form-control input-lg" placeholder="New Scribbit...">
         <span class="input-group-btn">
-            <button class="btn btn-success btn-lg" type="submit">&#10010;</button>
+            <button class="btn btn-success btn-lg" type="submit"><span class="glyphicon glyphicon-plus"></span></button>
         </span>
     </div>
 </form>
+</h1>
 
 <p>&nbsp;</p>
 
@@ -14,15 +16,19 @@
     {% for scribbit in scribbits %}
     <li class="list-group-item clearfix scribbit" data-scribbit="{{scribbit.name}}">
         <h3 class="pull-left">
-            <a href="#" class="btn btn-default btn-lg edit" title="edit">&#9998;</a>
+            <a href="#" class="btn btn-default btn-lg edit" title="edit"><span class="glyphicon glyphicon-pencil"></span></a>
             <a href="{{urlFor('scribbit-get', {'scribbit': scribbit.name})}}" data-pk="{{scribbit.name}}">{{scribbit.display_name}}</a>
             <small class="text-muted">
                 ({{scribbit.bit_count}} {% if scribbit.bit_count == 1 %} Bit {% else %} Bits {% endif %})
             </small>
         </h3>
         <div class="btn-group pull-right" role="group">
-            <button class="btn btn-default btn-lg download" title="download" data-url="{{urlFor('scribbit-download', {'scribbit': scribbit.name})}}" >&#11015;</button>
-            <button class="btn btn-default btn-lg delete" title="delete" data-url="{{urlFor('scribbit-delete', {'scribbit': scribbit.name})}}">&#10006;</button>
+            <button class="btn btn-default btn-lg download" title="download" data-url="{{urlFor('scribbit-download', {'scribbit': scribbit.name})}}" >
+                <span class="glyphicon glyphicon-download"></span>
+            </button>
+            <button class="btn btn-default btn-lg delete" title="delete" data-url="{{urlFor('scribbit-delete', {'scribbit': scribbit.name})}}">
+                <span class="glyphicon glyphicon-remove"></span>
+            </button>
         </div>
     </li>
     {% endfor %}

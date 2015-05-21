@@ -4,17 +4,13 @@
 <input type="hidden" name="scribbit" id="scribbit" value="{{scribbit}}">
 <input type="hidden" name="bit" id="bit" value="">
 <div class="row no-gutter">
-    {#<div class="col-sm-12 col-lg-6">#}
-        <div id="bit-editor">Write some **markdown** here...</div>
-    {#</div>
-    <div class="col-sm-12 col-lg-6">#}
-        <div id="bit-preview"></div>
-    {#</div>#}
+    <div id="bit-editor">Write some **markdown** here...</div>
+    <div id="bit-preview"></div>
 </div>
 <div class="row">
     <div class="text-center editor-buttons">
-        <button class="btn btn-success btn-xl btn-circle save" data-post-url="{{urlFor('bit-post')}}" data-put-url="{{urlFor('bit-put')}}">&#10004;</button>
-        <button class="btn btn-default btn-xl btn-circle cancel">&#10006;</button>
+        <button class="btn btn-success btn-xl btn-circle save" data-post-url="{{urlFor('bit-post')}}" data-put-url="{{urlFor('bit-put')}}"><span class="glyphicon glyphicon-ok"></span></button>
+        <button class="btn btn-default btn-xl btn-circle cancel"><span class="glyphicon glyphicon-remove"></span></button>
         <button class="btn btn-primary btn-xl btn-circle help" data-toggle="modal" data-target="#markdownModal"><b>?</b></button>
     </div>
 </div>
@@ -24,9 +20,13 @@
     <div class="panel-heading custom">
         <h3 class="pull-left">{{date}}</h3>
         <div class="btn-group pull-right bit" role="group">
-            <a href="#" class="btn btn-default btn-lg edit" title="edit">&#9998;</a>
-            <button class="btn btn-default btn-lg download" data-url="{{urlFor('bit-download', {'scribbit': scribbit, 'bit': bit.name})}}" title="download">&#11015;</a>
-            <button class="btn btn-default btn-lg delete" data-url="{{urlFor('bit-delete', {'scribbit': scribbit, 'bit': bit.name})}}" title="delete">&#10006;</button>
+            <button class="btn btn-default btn-lg edit" title="edit"><span class="glyphicon glyphicon-edit"></span></button>
+            <button class="btn btn-default btn-lg download" data-url="{{urlFor('bit-download', {'scribbit': scribbit, 'bit': bit.name})}}" title="download">
+                <span class="glyphicon glyphicon-download"></span>
+            </button>
+            <button class="btn btn-default btn-lg delete" data-url="{{urlFor('bit-delete', {'scribbit': scribbit, 'bit': bit.name})}}" title="delete">
+                <span class="glyphicon glyphicon-remove"></span>
+            </button>
         </div>
         <div class="clearfix"></div>
     </div>
