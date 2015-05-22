@@ -189,5 +189,6 @@ $(document).ready(function () {
         editor.clearSelection();
         editor.focus();
         editor.gotoLine(editor.session.doc.getAllLines().length);
+        editor.navigateLineEnd();
     });
 });
