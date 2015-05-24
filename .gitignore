@@ -5,3 +5,5 @@
 composer.lock
 /scribbits/
 !/scribbits/__lost+found/README.md
+/public/img/
+!/public/img/markdown_cheatsheet.jpg
