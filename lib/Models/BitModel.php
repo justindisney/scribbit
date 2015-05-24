@@ -74,21 +74,29 @@ class BitModel extends AbstractModel
 
     public function saveImage($fromUrl)
     {
-        $toFile = $this->scribbitPath . basename($fromUrl);
-        $content = "![image](" . $this->app->request->getRootUri() . "/img/" . basename($fromUrl) . ")";
+        $urlInfo = pathinfo($fromUrl);
+        $fileInfo = pathinfo($this->filename);
+        
+        // Use the same filename as the bit filename, 
+        // but use the extension from the image being downloaded (after cleaning it up)
+        preg_match("/^([a-zA-Z0-9]*)/", $urlInfo['extension'], $matches);
+        $imgFile = $this->scribbitPath . $fileInfo['filename'] . "." . $matches[0];
+        
+        // This is the markdown to go in the new bit file,
+        // which contains a link to the new image file
+        $content = "![image](" . $this->app->request->getRootUri() . "/img/" . basename($imgFile) . ")";
         
         try {
             $client = new Client();
-            $response = $client->get($fromUrl);
-            $client->get($fromUrl, ['save_to' => $this->scribbitPath . basename($fromUrl)]);
+            $client->get($fromUrl, ['save_to' => $imgFile]);
             
             $this->setContent($content);
             $this->saveContent();
             
-            $source = APP_PATH . "public/img/" . basename($fromUrl);
+            $source = APP_PATH . "public/img/" . basename($imgFile);
             
             $output = "";
-            $cmd = "ln -s $toFile $source";
+            $cmd = "ln -s $imgFile $source";
             $res = exec($cmd, $output);
         } catch (Exception $e) {
             // Log the error or something
