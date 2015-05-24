@@ -93,12 +93,15 @@ class ScribbitModel extends AbstractModel
     {
         $path = APP_PATH . Config::SCRIBBITS_DIRECTORY . $scribbit;
 
-        foreach ($this->getBits("$path/" . $this->fileGlob) as $bit) {
-            if (unlink($bit)) {
-//                var_dump("success"); die;
-            } else {
-//                var_dump($bit); die;
-            }
+        foreach (glob("$path/*.md") as $file) {
+            $bit = new BitModel($this->di);
+            
+            $bit->init(array(
+                'scribbit' => $scribbit,
+                'filename' => basename($file)
+            ));
+            
+            $bit->delete();
         }
 
         rmdir($path);

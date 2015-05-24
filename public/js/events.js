@@ -112,6 +112,9 @@ $(document).ready(function () {
 
         $('.markdown').each(function () {
             $(this).html(converter.makeHtml($(this).data('source')));
+            $(this).find('img').each(function () {
+                $(this).addClass('img-responsive');
+            });
         });
     }
 
@@ -190,5 +193,24 @@ $(document).ready(function () {
         editor.focus();
         editor.gotoLine(editor.session.doc.getAllLines().length);
         editor.navigateLineEnd();
+    });
+    
+    $("#uploadModal button").click(function () {
+        var url = $(this).data("url");
+        var image_url = $("#image-url").val();
+        
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: {
+                image_url: image_url
+            },
+            success: function (data, textStatus, jqXHR) {
+                location.reload(true);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(url + ': image save failed');
+            }
+        });
     });
 });

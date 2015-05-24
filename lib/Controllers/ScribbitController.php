@@ -3,14 +3,16 @@
 namespace Controllers;
 
 use Config;
-use Pimple;
 use Controllers\AbstractController;
+use Models\ScribbitModel;
+use Pimple;
 
 class ScribbitController extends AbstractController
 {
     public function init(Pimple $di)
     {
         $this->model = $di['ScribbitModel'];
+        $this->di = $di;
     }
 
     public function find($name)
@@ -72,7 +74,8 @@ class ScribbitController extends AbstractController
     public function delete($name)
     {
         if ($this->session->isAuthed()) {
-            $this->model->delete($name);
+            $scribbit = new ScribbitModel($this->di);
+            $scribbit->delete($name);
         }
     }
 
