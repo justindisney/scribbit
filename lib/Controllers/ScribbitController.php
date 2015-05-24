@@ -21,7 +21,7 @@ class ScribbitController extends AbstractController
 
             $files = array();
             $i = 1; // add this to the end of the filectime value, in case files have the same filectime
-            foreach (glob(APP_PATH . Config::SCRIBBITS_DIRECTORY . "$dir_name/*") as $file) {
+            foreach (glob(APP_PATH . Config::SCRIBBITS_DIRECTORY . "$dir_name/*.{md}", GLOB_BRACE) as $file) {
                 $d                     = date(Config::DATE_FORMAT, filectime($file));
                 $files[$d . "$i"]['contents'] = htmlspecialchars(file_get_contents($file));
                 $files[$d . "$i"]['name']     = basename($file);
