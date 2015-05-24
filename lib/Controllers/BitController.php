@@ -8,18 +8,20 @@ use Models\BitModel;
 
 class BitController extends AbstractController
 {
+    protected $di;
+    
     public function init(Pimple $di)
     {
-
+        $this->di = $di;
     }
 
     public function post()
     {
         if ($this->session->isAuthed()) {
-            $bit = new BitModel(array(
+            $bit = new BitModel($this->di);
+            $bit->init(array(
                 'scribbit' => $this->app->request->post('scribbit')
             ));
-
             $bit->setContent($this->app->request->post('content'));
             $bit->saveContent();
 
@@ -30,7 +32,8 @@ class BitController extends AbstractController
     public function put()
     {
         if ($this->session->isAuthed()) {
-            $bit = new BitModel(array(
+            $bit = new BitModel($this->di);
+            $bit->init(array(
                 'scribbit' => $this->app->request->put('scribbit'),
                 'filename' => $this->app->request->put('bit')
             ));
@@ -45,7 +48,8 @@ class BitController extends AbstractController
     public function download($scribbit, $filename)
     {
         if ($this->session->isAuthed()) {
-            $bit = new BitModel(array(
+            $bit = new BitModel($this->di);
+            $bit->init(array(
                 'scribbit' => $scribbit,
                 'filename' => $filename
             ));
@@ -67,12 +71,24 @@ class BitController extends AbstractController
     public function delete($scribbit, $filename)
     {
         if ($this->session->isAuthed()) {
-            $bit = new BitModel(array(
+            $bit = new BitModel($this->di);
+            $bit->init(array(
                 'scribbit' => $scribbit,
                 'filename' => $filename
             ));
 
             $bit->delete();
+        }
+    }
+
+    public function saveImage($scribbit) {
+        if ($this->session->isAuthed()) {
+            $bit = new BitModel($this->di);
+            $bit->init(array(
+                'scribbit' => $scribbit
+            ));
+
+            $bit->saveImage($this->app->request->post('image_url'));
         }
     }
 
