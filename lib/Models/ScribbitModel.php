@@ -4,10 +4,16 @@ namespace Models;
 
 use Config;
 use ZipArchive;
+use Models\AbstractModel;
 
-class ScribbitModel
+class ScribbitModel extends AbstractModel
 {
     protected $fileGlob = '*.{md,jpg,jpeg,png,gif}';
+
+    public function init($params = array())
+    {
+        
+    }
 
     public function getBitCount($path)
     {
@@ -30,7 +36,7 @@ class ScribbitModel
                 $t                             = filectime($scribbit);
                 $scribbits[$t]['name']         = basename($scribbit);
                 $scribbits[$t]['display_name'] = preg_replace('/_-_/', ' ', basename($scribbit));
-                $scribbits[$t]['bit_count']    = $this->getBitCount("$scribbit/*");
+                $scribbits[$t]['bit_count']    = $this->getBitCount("$scribbit/*.{md}");
             }
         }
 

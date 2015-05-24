@@ -3,9 +3,11 @@
 namespace Models;
 
 use Config;
+use GuzzleHttp\Client;
+use Models\AbstractModel;
 use ZipArchive;
 
-class BitModel
+class BitModel extends AbstractModel
 {
     protected $absolutePath;
     protected $content;
@@ -13,7 +15,7 @@ class BitModel
     protected $scribbit;
     protected $scribbitPath;
 
-    public function __construct($params = array())
+    public function init($params = array())
     {
         if (isset($params['filename'])) {
             $this->filename = $params['filename'];
@@ -68,6 +70,30 @@ class BitModel
     public function delete()
     {
         unlink($this->absolutePath);
+    }
+
+    public function saveImage($fromUrl)
+    {
+        $toFile = $this->scribbitPath . basename($fromUrl);
+        $content = "![image](" . $this->app->request->getRootUri() . "/img/" . basename($fromUrl) . ")";
+        
+        try {
+            $client = new Client();
+            $response = $client->get($fromUrl);
+            $client->get($fromUrl, ['save_to' => $this->scribbitPath . basename($fromUrl)]);
+            
+            $this->setContent($content);
+            $this->saveContent();
+            
+            $source = APP_PATH . "public/img/" . basename($fromUrl);
+            
+            $output = "";
+            $cmd = "ln -s $toFile $source";
+            $res = exec($cmd, $output);
+        } catch (Exception $e) {
+            // Log the error or something
+            return false;
+        }
     }
 
 }
