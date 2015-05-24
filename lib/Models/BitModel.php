@@ -69,7 +69,19 @@ class BitModel extends AbstractModel
 
     public function delete()
     {
-        unlink($this->absolutePath);
+        $info = pathinfo($this->absolutePath);
+        $dirName = $info['dirname'];
+        $fileName = $info['filename'];
+        
+        // remove any symlinks to image files
+        foreach (glob(APP_PATH . "public/img/$fileName.*") as $file) {
+            unlink($file);
+        }
+        
+        // now remove the actual bit files
+        foreach (glob("$dirName/$fileName.*") as $file) {
+            unlink($file);
+        }
     }
 
     public function saveImage($fromUrl)
