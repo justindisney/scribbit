@@ -195,7 +195,7 @@ $(document).ready(function () {
         editor.navigateLineEnd();
     });
     
-    $("#uploadModal button").click(function () {
+    $("#uploadModal div.modal-body button").click(function () {
         var url = $(this).data("url");
         var image_url = $("#image-url").val();
         
@@ -206,6 +206,7 @@ $(document).ready(function () {
                 image_url: image_url
             },
             success: function (data, textStatus, jqXHR) {
+                $("#uploadModal").modal('toggle');
                 location.reload(true);
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -213,4 +214,31 @@ $(document).ready(function () {
             }
         });
     });
+    
+    $('#fileupload').fileupload({
+        url: $(this).data("url"),
+        dataType: 'json',
+        done: function (e, data) {
+//            $.each(data.result.files, function (index, file) {
+//                $('<p/>').text(file.name).appendTo('#files');
+//            });
+console.log("when is this called?");
+            $("#uploadModal").modal('toggle');
+        },
+        success: function (e, data) {
+//            $.each(data.result.files, function (index, file) {
+//                $('<p/>').text(file.name).appendTo('#files');
+//            });
+console.log("when is this called?");
+            $("#uploadModal").modal('toggle');
+        },
+        progressall: function (e, data) {
+            var progress = parseInt(data.loaded / data.total * 100, 10);
+            $('#progress .progress-bar').css(
+                'width',
+                progress + '%'
+            );
+        }
+    }).prop('disabled', !$.support.fileInput)
+        .parent().addClass($.support.fileInput ? undefined : 'disabled');
 });

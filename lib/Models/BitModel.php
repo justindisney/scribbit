@@ -69,50 +69,85 @@ class BitModel extends AbstractModel
 
     public function delete()
     {
-        $info = pathinfo($this->absolutePath);
-        $dirName = $info['dirname'];
+        $info     = pathinfo($this->absolutePath);
+        $dirName  = $info['dirname'];
         $fileName = $info['filename'];
-        
+
         // remove any symlinks to image files
         foreach (glob(APP_PATH . "public/img/$fileName.*") as $file) {
             unlink($file);
         }
-        
+
         // now remove the actual bit files
         foreach (glob("$dirName/$fileName.*") as $file) {
             unlink($file);
         }
     }
 
-    public function saveImage($fromUrl)
+    public function saveWebImage($fromUrl)
     {
-        $urlInfo = pathinfo($fromUrl);
+        $urlInfo  = pathinfo($fromUrl);
         $fileInfo = pathinfo($this->filename);
-        
+
         // Use the same filename as the bit filename, 
         // but use the extension from the image being downloaded (after cleaning it up)
         preg_match("/^([a-zA-Z0-9]*)/", $urlInfo['extension'], $matches);
         $imgFile = $this->scribbitPath . $fileInfo['filename'] . "." . $matches[0];
-        
+
         // This is the markdown to go in the new bit file,
         // which contains a link to the new image file
         $content = "![image]({{baseUrl()}}/img/" . basename($imgFile) . ")";
-        
+
         try {
             $client = new Client();
             $client->get($fromUrl, ['verify' => false, 'save_to' => $imgFile]);
+
+            $this->setContent($content);
+            $this->saveContent();
+
+            $source = APP_PATH . "public/img/" . basename($imgFile);
+
+            $output = "";
+            $cmd    = "ln -s $imgFile $source";
+            $res    = exec($cmd, $output);
+        } catch (Exception $e) {
+            // Log the error or something
+            return false;
+        }
+    }
+
+    public function saveUploadedImage()
+    {
+        $fileInfo = pathinfo($this->filename);
+        $storage  = new \Upload\Storage\FileSystem($this->scribbitPath);
+        $file     = new \Upload\File('uploadedImage', $storage);
+        $ext      = $file->getExtension();
+
+        // Use the same filename as the bit filename, 
+        // but use the extension from the image being downloaded (after cleaning it up)
+        preg_match("/^([a-zA-Z0-9]*)/", $ext, $matches);
+        $imgFile = $this->scribbitPath . $fileInfo['filename'] . "." . $matches[0];
+        $file->setName($fileInfo['filename']);
+
+        try {
+            // Success!
+            $file->upload();
+            
+            // This is the markdown to go in the new bit file,
+            // which contains a link to the new image file
+            $content = "![image]({{baseUrl()}}/img/" . basename($imgFile) . ")";
             
             $this->setContent($content);
             $this->saveContent();
             
             $source = APP_PATH . "public/img/" . basename($imgFile);
-            
+
             $output = "";
-            $cmd = "ln -s $imgFile $source";
-            $res = exec($cmd, $output);
-        } catch (Exception $e) {
-            // Log the error or something
-            return false;
+            $cmd    = "ln -s $imgFile $source";
+            $res    = exec($cmd, $output);
+        } catch (\Exception $e) {
+            // Fail!
+            $errors = $file->getErrors();
         }
     }
 

@@ -95,9 +95,13 @@ $app->group('/bit', function () use ($pimple) {
         $pimple['BitController']->post();
     })->name('bit-post');
 
-    $pimple['app']->post('/save-image/:scribbit', function ($scribbit) use ($pimple) {
-        $pimple['BitController']->saveImage($scribbit);
-    })->name('bit-save-image');
+    $pimple['app']->post('/save-web-image/:scribbit', function ($scribbit) use ($pimple) {
+        $pimple['BitController']->saveWebImage($scribbit);
+    })->name('bit-save-web-image');
+    
+    $pimple['app']->post('/upload-image/:scribbit', function ($scribbit) use ($pimple) {
+        $pimple['BitController']->saveUploadedImage($scribbit);
+    })->name('bit-upload-image');
     
     $pimple['app']->put('', function () use ($pimple) {
         $pimple['BitController']->put();

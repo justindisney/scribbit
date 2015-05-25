@@ -52,7 +52,8 @@ class ScribbitController extends AbstractController
     public function post()
     {
         if ($this->session->isAuthed()) {
-            $this->model->create($this->app->request->post('scribbit'));
+            $scribbit = new ScribbitModel($this->di);
+            $scribbit->create($this->app->request->post('scribbit'));
         }
     }
 
@@ -62,12 +63,11 @@ class ScribbitController extends AbstractController
             $old = $this->app->request->put('pk');
             $new = $this->app->request->put('value');
 
-            $res = $this->model->update($old, $new);
+            $scribbit = new ScribbitModel($this->di);
+            
+            $result = $scribbit->update($old, $new);
 
-            if ($res !== false) {
-                $response = array ('old' => $old, 'new' => $res, 'display' => $new);
-                echo json_encode($response);
-            }
+            echo json_encode($result);
         }
     }
 

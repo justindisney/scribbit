@@ -16,7 +16,8 @@
         "slim/views": "^0.1.3",
         "twig/twig": "1.*",
         "pimple/pimple": "1.*",
-        "guzzlehttp/guzzle": "~5.0"
+        "guzzlehttp/guzzle": "~5.0",
+        "codeguy/upload": "*"
     },
     "autoload": {
         "psr-0": {

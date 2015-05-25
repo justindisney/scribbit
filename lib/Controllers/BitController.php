@@ -8,8 +8,9 @@ use Models\BitModel;
 
 class BitController extends AbstractController
 {
+
     protected $di;
-    
+
     public function init(Pimple $di)
     {
         $this->di = $di;
@@ -81,14 +82,27 @@ class BitController extends AbstractController
         }
     }
 
-    public function saveImage($scribbit) {
+    public function saveWebImage($scribbit)
+    {
         if ($this->session->isAuthed()) {
             $bit = new BitModel($this->di);
             $bit->init(array(
                 'scribbit' => $scribbit
             ));
 
-            $bit->saveImage($this->app->request->post('image_url'));
+            $bit->saveWebImage($this->app->request->post('image_url'));
+        }
+    }
+
+    public function saveUploadedImage($scribbit)
+    {
+        if ($this->session->isAuthed()) {
+            $bit = new BitModel($this->di);
+            $bit->init(array(
+                'scribbit' => $scribbit
+            ));
+            
+            $bit->saveUploadedImage();
         }
     }
 
