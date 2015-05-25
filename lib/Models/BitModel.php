@@ -100,7 +100,7 @@ class BitModel extends AbstractModel
         
         try {
             $client = new Client();
-            $client->get($fromUrl, ['save_to' => $imgFile]);
+            $client->get($fromUrl, ['verify' => false, 'save_to' => $imgFile]);
             
             $this->setContent($content);
             $this->saveContent();
