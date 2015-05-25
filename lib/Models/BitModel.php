@@ -96,7 +96,7 @@ class BitModel extends AbstractModel
         
         // This is the markdown to go in the new bit file,
         // which contains a link to the new image file
-        $content = "![image](" . $this->app->request->getRootUri() . "/img/" . basename($imgFile) . ")";
+        $content = "![image]({{baseUrl()}}/img/" . basename($imgFile) . ")";
         
         try {
             $client = new Client();

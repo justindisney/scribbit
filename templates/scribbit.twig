@@ -31,7 +31,7 @@
         </div>
         <div class="clearfix"></div>
     </div>
-    <div class="panel-body markdown" data-source="{{bit.contents}}"></div>
+    <div class="panel-body markdown" data-source="{{include(template_from_string(bit.contents))}}"></div>
 </div>
 {% endfor %}
 {% include 'modals.twig' %}

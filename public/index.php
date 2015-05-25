@@ -22,7 +22,9 @@ $app->view->parserOptions = array(
     'strict_variables' => false,
     'autoescape' => true
 );
-$app->view->parserExtensions = array(new \Slim\Views\TwigExtension());
+$app->view->parserExtensions = array(
+    new \Slim\Views\TwigExtension(),
+    new \Twig_Extension_StringLoader);
 
 $pimple = new Pimple();
 $pimple['app'] = $app;
