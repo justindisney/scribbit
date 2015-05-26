@@ -6,7 +6,7 @@ use \Session;
 use \Controllers;
 use \Models;
 
-$session = new Session(CONFIG::APP_NAME, APP_PATH, CONFIG::USER, CONFIG::PASSWORD);
+$session = new Session(Config::APP_NAME, APP_PATH, Config::USER, Config::PASSWORD);
 
 // Prepare app
 $app = new \Slim\Slim(array(
