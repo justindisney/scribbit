@@ -25,37 +25,79 @@ function unescapeHTML(text) {
     }
 }
 
+var editableParams = {
+    type: 'text',
+    url: baseUrl + '/scribbit',
+    title: 'Enter new name',
+    inputclass: 'input-lg',
+    toggle: 'manual',
+    success: function (response, newValue) {
+        var r = JSON.parse(response);
+
+        // Update links etc that depend on the scribbit name
+        $(this).editable('option', 'pk', r.new);
+        $(this).parents("li").attr("data-scribbit", r.new);
+
+        $(this).parents("li").find('a').each(function () {
+            $(this).attr("href", $(this).attr("href").replace(r.old, r.new));
+        });
+
+        $(this).parents("li").find('div.btn-group button').each(function () {
+            var newUrl = $(this).attr("data-url").replace(r.old, r.new);
+            $(this).attr("data-url", newUrl);
+        });
+    }
+}
+
 $(document).ready(function () {
     $.fn.editable.defaults.mode = 'inline';
     $.fn.editable.defaults.ajaxOptions = {type: "PUT"};
 
-    $('li.scribbit h3 a').editable({
-        type: 'text',
-        url: baseUrl + '/scribbit',
-        title: 'Enter new name',
-        inputclass: 'input-lg',
-        toggle: 'manual',
-        success: function (response, newValue) {
-            var r = JSON.parse(response);
+    $('button.new-scribbit').click(function (e) {
+        e.preventDefault();
 
-            // Update links etc that depend on the scribbit name
-            $(this).editable('option', 'pk', r.new);
-            $(this).parents("li").attr("data-scribbit", r.new);
+        var url = $(this).attr("data-url");
+        var scribbit = $("#newScribbit").val();
 
-            $(this).parents("li").find('a').each(function () {
-                $(this).attr("href", $(this).attr("href").replace(r.old, r.new));
-            });
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: {
+                scribbit: scribbit
+            },
+            success: function (data, textStatus, jqXHR) {
+                data = JSON.parse(data);
 
-            $(this).parents("li").find('div.btn-group button').each(function () {
-                var newUrl = $(this).attr("data-url").replace(r.old, r.new);
-                $(this).attr("data-url", newUrl);
-            });
-        }
+                var str = $('.scribbit-template')[0].outerHTML;
+                str = str.replace(/SCRIBBIT_NAME/g, data.scribbit_name);
+                str = str.replace(/SCRIBBIT_DISPLAY_NAME/g, data.scribbit_display_name);
+
+                html = $.parseHTML(str);
+
+                $(html).removeClass('scribbit-template').addClass('scribbit');
+                $(html).find("h3 a").editable(editableParams);
+
+                $(html).find("h3 a").on('hidden', function (e, reason) {
+                    if (reason === 'save' || reason === 'cancel') {
+                        $('li.scribbit h3 button.edit').show();
+                    }
+                });
+
+                $("ul.scribbits").prepend($(html));
+
+                $("#newScribbit").val('');
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(scribbit + ' creation failed');
+            }
+        });
     });
 
-    $('li.scribbit h3 a.edit').click(function (e) {
+    $('li.scribbit h3 a').editable(editableParams);
+
+    $(document).on('click', 'li.scribbit h3 button.edit', function (e) {
         e.stopPropagation();
-        var a = $(this).parents("li").find('h3 a').not(".edit");
+        var a = $(this).parents("li").find('h3 a');
 
         $(a).editable('toggle');
         $(this).hide();
@@ -63,18 +105,19 @@ $(document).ready(function () {
 
     $('.editable').on('hidden', function (e, reason) {
         if (reason === 'save' || reason === 'cancel') {
-            $('li.scribbit h3 a.edit').show();
+            $('li.scribbit h3 button.edit').show();
         }
     });
 
-    $("li.scribbit .download").click(function () {
+    $(document).on('click', "li.scribbit .download", function () {
         // $(this).data("url") doesn't return new value if data-url has changed
         window.location = $(this).attr("data-url");
     });
 
-    $("li.scribbit .delete").click(function () {
+    $(document).on('click', "li.scribbit .delete", function () {
         // $(this).data("url") doesn't return new value if data-url has changed
         var url = $(this).attr("data-url");
+        var li = $(this).parents("li.scribbit");
 
         bootbox.confirm("Delete this entire scribbit?", function (result) {
             if (result) {
@@ -82,7 +125,7 @@ $(document).ready(function () {
                     type: 'DELETE',
                     url: url,
                     success: function (data, textStatus, jqXHR) {
-                        location.reload(true);
+                        li.remove();
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         console.log(scribbit + ' delete failed');
@@ -194,11 +237,11 @@ $(document).ready(function () {
         editor.gotoLine(editor.session.doc.getAllLines().length);
         editor.navigateLineEnd();
     });
-    
+
     $("#uploadModal div.modal-body button").click(function () {
         var url = $(this).data("url");
         var image_url = $("#image-url").val();
-        
+
         $.ajax({
             type: 'POST',
             url: url,
@@ -214,7 +257,7 @@ $(document).ready(function () {
             }
         });
     });
-    
+
     $('#fileupload').fileupload({
         url: $(this).data("url"),
         dataType: 'json',

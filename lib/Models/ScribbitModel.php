@@ -91,24 +91,31 @@ class ScribbitModel extends AbstractModel
 
     public function create($scribbit)
     {
-        $newDirectory = $this->absoluteScribbitsPath . $this->sanitizeName($scribbit);
-        
+        $newName = $this->sanitizeName($scribbit);
+        $newDirectory = $this->absoluteScribbitsPath . $newName;
+
         if (!file_exists($newDirectory)) {
             mkdir($newDirectory);
+
+            return array(
+                'scribbit_name' => $newName,
+                'scribbit_display_name' => preg_replace('/_-_/', ' ', $newName)
+            );
         }
+
+        return false;
     }
 
     public function update($old, $new)
     {
-        $cleanOld = $this->sanitizeName($old);
         $cleanNew = $this->sanitizeName($new);
 
         if (file_exists($this->absoluteScribbitsPath . $cleanNew)) {
             $this->app->halt(500, json_encode(array('status' => "Scribbit $cleanNew exists")));
         }
-        
-        if (rename($this->absoluteScribbitsPath . $cleanOld, $this->absoluteScribbitsPath . $cleanNew)) {
-            return array ('old' => $cleanOld, 'new' => $cleanNew, 'display' => $new);
+
+        if (rename($this->absoluteScribbitsPath . $old, $this->absoluteScribbitsPath . $cleanNew)) {
+            return array ('old' => $old, 'new' => $cleanNew, 'display' => $new);
         } else {
             $this->app->halt(500, json_encode(array('status' => "Scribbit renaming failed")));
         }

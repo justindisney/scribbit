@@ -53,7 +53,15 @@ class ScribbitController extends AbstractController
     {
         if ($this->session->isAuthed()) {
             $scribbit = new ScribbitModel($this->di);
-            $scribbit->create($this->app->request->post('scribbit'));
+            $name = $this->app->request->post('scribbit');
+            
+            $result = $scribbit->create($name);
+
+            if ($result) {
+                echo json_encode($result);
+            } else {
+                $this->app->halt(500, json_encode(array('status' => "creating $name failed")));
+            }
         }
     }
 
@@ -64,7 +72,7 @@ class ScribbitController extends AbstractController
             $new = $this->app->request->put('value');
 
             $scribbit = new ScribbitModel($this->di);
-            
+
             $result = $scribbit->update($old, $new);
 
             echo json_encode($result);
