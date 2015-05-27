@@ -119,7 +119,19 @@ $(document).ready(function () {
         var url = $(this).attr("data-url");
         var li = $(this).parents("li.scribbit");
 
-        bootbox.confirm("Delete this entire scribbit?", function (result) {
+        bootbox.confirm({
+            message: "<h3>Delete this entire scribbit?</h3>",
+            buttons: {
+                confirm: {
+                    label: "OK",
+                    className: "btn-primary btn-lg"
+                },
+                cancel: {
+                    label: "Cancel",
+                    className: "btn-default btn-lg"
+                }
+            },
+            callback: function (result) {
             if (result) {
                 $.ajax({
                     type: 'DELETE',
@@ -132,7 +144,7 @@ $(document).ready(function () {
                     }
                 });
             }
-        });
+        }});
     });
 
     if ($('#bit-editor').length) {
@@ -204,7 +216,19 @@ $(document).ready(function () {
         var url = $(this).data("url");
         var bitPanel = $(this).parents("div.panel");
 
-        bootbox.confirm("Delete this bit?", function (result) {
+        bootbox.confirm({
+            message: "<h3>Delete this bit?</h3>",
+            buttons: {
+                confirm: {
+                    label: "OK",
+                    className: "btn-primary btn-lg"
+                },
+                cancel: {
+                    label: "Cancel",
+                    className: "btn-default btn-lg"
+                }
+            },
+            callback: function (result) {
             if (result) {
                 $.ajax({
                     type: 'DELETE',
@@ -217,7 +241,7 @@ $(document).ready(function () {
                     }
                 });
             }
-        });
+        }});
     });
 
     $("div.bit .download").click(function () {
