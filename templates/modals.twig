@@ -16,7 +16,7 @@
         </div>
     </div>
 </div>
-                
+
 <!-- Upload Modal -->
 <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadModalLabel" aria-hidden="true">
     <div class="modal-dialog  modal-lg">
@@ -34,24 +34,16 @@
                         </button>
                     </span>
                 </div>
-                    
+
                 <h3 class="text-center"> -- OR -- </h3>
-                
-{#                <div class="input-group">
-                    <input id="camera-image" type="file" capture="camera" accept="image/*" class="form-control input-lg">
-                    <span class="input-group-btn">
-                        <button class="btn btn-success btn-lg" type="submit" data-url="{{urlFor('bit-save-image', {'scribbit': scribbit})}}" data-dismiss="modal"><span class="glyphicon glyphicon-plus"></span></button>
-                    </span>
-                </div>#}
-                    
-                        <!-- The fileinput-button span is used to style the file input field as button -->
-    <span class="btn btn-success btn-lg fileinput-button">
-        <i class="glyphicon glyphicon-plus"></i>
-        <span>Add files</span>
-        <!-- The file input field used as target for the file upload widget -->
-        <input id="fileupload" type="file" name="uploadedImage" data-url="{{urlFor('bit-upload-image', {'scribbit': scribbit})}}" capture="camera" accept="image/*" >
-    </span>
-                {#<input id="fileupload" type="file" name="files[]" data-url="server/php/" multiple>#}
+
+                <!-- The fileinput-button span is used to style the file input field as button -->
+                <span class="btn btn-success btn-lg fileinput-button">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    <span>Add files</span>
+                    <!-- The file input field used as target for the file upload widget -->
+                    <input id="fileupload" type="file" name="uploadedImage" data-url="{{urlFor('bit-upload-image', {'scribbit': scribbit})}}" capture="camera" accept="image/*" >
+                </span>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-lg btn-default" data-dismiss="modal">Close</button>

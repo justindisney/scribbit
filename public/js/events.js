@@ -180,6 +180,23 @@ $(document).ready(function () {
         editor.focus();
     });
 
+    function createImageBit(data) {
+        var converter = new Showdown.converter();
+
+        var str = $('.bit-template')[0].outerHTML;
+        str = str.replace(/DATE/g, data.date);
+        str = str.replace(/BIT_NAME/g, data.name);
+        str = str.replace(/SCRIBBIT/g, data.scribbit);
+        str = str.replace(/HTML_CONTENT/g, converter.makeHtml(data.rendered_content));
+        str = str.replace(/CONTENT/g, data.rendered_content);
+
+        html = $.parseHTML(str);
+
+        $(html).removeClass('bit-template'); //.addClass('scribbit');
+
+        return $(html);
+    }
+
     $("div.editor-buttons button.save").click(function () {
         var content = editor.getValue();
         var requestType = 'POST';
@@ -195,14 +212,19 @@ $(document).ready(function () {
 
         $.ajax({
             type: requestType,
+            dataType: 'json',
             url: url,
             data: {
                 bit: bit,
                 content: content,
                 scribbit: scribbit
             },
-            success: function (data, textStatus, jqXHR) {
-                location.reload(true);
+            success: function (response) {
+                var html = createImageBit(response);
+                $("div.bit-wrapper").prepend($(html));
+
+                // lazy way to reset the form
+                $("div.editor-buttons button.cancel").click();
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log(' create failed');
@@ -261,25 +283,6 @@ $(document).ready(function () {
         editor.gotoLine(editor.session.doc.getAllLines().length);
         editor.navigateLineEnd();
     });
-
-    function createImageBit(data) {
-//        data = JSON.parse(data);
-
-        var converter = new Showdown.converter();
-
-        var str = $('.bit-template')[0].outerHTML;
-        str = str.replace(/DATE/g, data.date);
-        str = str.replace(/BIT_NAME/g, data.name);
-        str = str.replace(/SCRIBBIT/g, data.scribbit);
-        str = str.replace(/HTML_CONTENT/g, converter.makeHtml(data.rendered_content));
-        str = str.replace(/CONTENT/g, data.rendered_content);
-
-        html = $.parseHTML(str);
-
-        $(html).removeClass('bit-template'); //.addClass('scribbit');
-
-        return $(html);
-    }
 
     $("#uploadModal div.modal-body button").click(function () {
         var url = $(this).data("url");
