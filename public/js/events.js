@@ -165,7 +165,7 @@ $(document).ready(function () {
 
         $('#bit-editor').keyup();
 
-        $('.markdown').each(function () {
+        $('div.bit-wrapper .markdown').each(function () {
             $(this).html(converter.makeHtml($(this).data('source')));
             $(this).find('img').each(function () {
                 $(this).addClass('img-responsive');
@@ -262,6 +262,25 @@ $(document).ready(function () {
         editor.navigateLineEnd();
     });
 
+    function createImageBit(data) {
+//        data = JSON.parse(data);
+
+        var converter = new Showdown.converter();
+
+        var str = $('.bit-template')[0].outerHTML;
+        str = str.replace(/DATE/g, data.date);
+        str = str.replace(/BIT_NAME/g, data.name);
+        str = str.replace(/SCRIBBIT/g, data.scribbit);
+        str = str.replace(/HTML_CONTENT/g, converter.makeHtml(data.rendered_content));
+        str = str.replace(/CONTENT/g, data.rendered_content);
+
+        html = $.parseHTML(str);
+
+        $(html).removeClass('bit-template'); //.addClass('scribbit');
+
+        return $(html);
+    }
+
     $("#uploadModal div.modal-body button").click(function () {
         var url = $(this).data("url");
         var image_url = $("#image-url").val();
@@ -269,12 +288,17 @@ $(document).ready(function () {
         $.ajax({
             type: 'POST',
             url: url,
+            dataType: 'json',
             data: {
                 image_url: image_url
             },
-            success: function (data, textStatus, jqXHR) {
+            success: function (response) {
+                var html = createImageBit(response);
+
+                $("div.bit-wrapper").prepend($(html));
+
                 $("#uploadModal").modal('toggle');
-                location.reload(true);
+                $("#image-url").val('');
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log(url + ': image save failed');
@@ -285,27 +309,13 @@ $(document).ready(function () {
     $('#fileupload').fileupload({
         url: $(this).data("url"),
         dataType: 'json',
-        done: function (e, data) {
-//            $.each(data.result.files, function (index, file) {
-//                $('<p/>').text(file.name).appendTo('#files');
-//            });
-console.log("when is this called?");
+        success: function (response) {
+            var html = createImageBit(response);
+
+            $("div.bit-wrapper").prepend($(html));
+
             $("#uploadModal").modal('toggle');
-        },
-        success: function (e, data) {
-//            $.each(data.result.files, function (index, file) {
-//                $('<p/>').text(file.name).appendTo('#files');
-//            });
-console.log("when is this called?");
-            $("#uploadModal").modal('toggle');
-        },
-        progressall: function (e, data) {
-            var progress = parseInt(data.loaded / data.total * 100, 10);
-            $('#progress .progress-bar').css(
-                'width',
-                progress + '%'
-            );
+            $("#image-url").val('');
         }
-    }).prop('disabled', !$.support.fileInput)
-        .parent().addClass($.support.fileInput ? undefined : 'disabled');
+    });
 });

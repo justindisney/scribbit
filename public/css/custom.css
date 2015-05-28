@@ -37,7 +37,7 @@ button.help b {
     font-size: 1.75em
 }
 
-li.scribbit-template {
+li.scribbit-template, div.bit-template {
     display: none;
 }
 

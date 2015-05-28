@@ -5,6 +5,7 @@ namespace Models;
 use Config;
 use GuzzleHttp\Client;
 use Models\AbstractModel;
+use Twig_Extension_StringLoader;
 use ZipArchive;
 
 class BitModel extends AbstractModel
@@ -45,7 +46,20 @@ class BitModel extends AbstractModel
 
     public function saveContent()
     {
-        file_put_contents($this->absolutePath, $this->content);
+        $results = array();
+
+        if (file_put_contents($this->absolutePath, $this->content) !== false) {
+            $results['date']             = date(Config::DATE_FORMAT, filectime($this->absolutePath));
+            $results['content']          = htmlspecialchars(file_get_contents($this->absolutePath));
+            $results['name']             = $this->filename;
+            $results['scribbit']         = $this->scribbit;
+
+            // The bit may have some Twig syntax in it (like baseUrl() for image paths),
+            // so have twig render the string the same as it would a variable in a Twig template
+            $results['rendered_content'] = $this->app->view->render("string.twig", array("__str__" => $results['content']));
+
+            return $results;
+        }
     }
 
     public function download()
@@ -89,27 +103,28 @@ class BitModel extends AbstractModel
         $urlInfo  = pathinfo($fromUrl);
         $fileInfo = pathinfo($this->filename);
 
-        // Use the same filename as the bit filename, 
+        // Use the same filename as the bit filename,
         // but use the extension from the image being downloaded (after cleaning it up)
         preg_match("/^([a-zA-Z0-9]*)/", $urlInfo['extension'], $matches);
         $imgFile = $this->scribbitPath . $fileInfo['filename'] . "." . $matches[0];
-
-        // This is the markdown to go in the new bit file,
-        // which contains a link to the new image file
-        $content = "![image]({{baseUrl()}}/img/" . basename($imgFile) . ")";
 
         try {
             $client = new Client();
             $client->get($fromUrl, ['verify' => false, 'save_to' => $imgFile]);
 
-            $this->setContent($content);
-            $this->saveContent();
-
+            // Create a symlink in the web-accessible directory to the actual image file
             $source = APP_PATH . "public/img/" . basename($imgFile);
 
             $output = "";
             $cmd    = "ln -s $imgFile $source";
             $res    = exec($cmd, $output);
+
+            // This is the markdown to go in the new bit file,
+            // which contains a link to the new image file
+            $content = "![image]({{baseUrl()}}/img/" . basename($imgFile) . ")";
+
+            $this->setContent($content);
+            return $this->saveContent();
         } catch (Exception $e) {
             // Log the error or something
             return false;
@@ -123,7 +138,7 @@ class BitModel extends AbstractModel
         $file     = new \Upload\File('uploadedImage', $storage);
         $ext      = $file->getExtension();
 
-        // Use the same filename as the bit filename, 
+        // Use the same filename as the bit filename,
         // but use the extension from the image being downloaded (after cleaning it up)
         preg_match("/^([a-zA-Z0-9]*)/", $ext, $matches);
         $imgFile = $this->scribbitPath . $fileInfo['filename'] . "." . $matches[0];
@@ -132,22 +147,25 @@ class BitModel extends AbstractModel
         try {
             // Success!
             $file->upload();
-            
-            // This is the markdown to go in the new bit file,
-            // which contains a link to the new image file
-            $content = "![image]({{baseUrl()}}/img/" . basename($imgFile) . ")";
-            
-            $this->setContent($content);
-            $this->saveContent();
-            
+
+            // Create a symlink in the web-accessible directory to the actual image file
             $source = APP_PATH . "public/img/" . basename($imgFile);
 
             $output = "";
             $cmd    = "ln -s $imgFile $source";
             $res    = exec($cmd, $output);
+
+            // This is the markdown to go in the new bit file,
+            // which contains a link to the new image file
+            $content = "![image]({{baseUrl()}}/img/" . basename($imgFile) . ")";
+
+            $this->setContent($content);
+            return $this->saveContent();
         } catch (\Exception $e) {
             // Fail!
             $errors = $file->getErrors();
+
+            return false;
         }
     }
 

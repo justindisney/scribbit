@@ -24,9 +24,11 @@ class BitController extends AbstractController
                 'scribbit' => $this->app->request->post('scribbit')
             ));
             $bit->setContent($this->app->request->post('content'));
-            $bit->saveContent();
+            $result = $bit->saveContent();
 
-            return $bit->getFileName();
+            if ($result) {
+                echo json_encode($result);
+            }
         }
     }
 
@@ -90,7 +92,11 @@ class BitController extends AbstractController
                 'scribbit' => $scribbit
             ));
 
-            $bit->saveWebImage($this->app->request->post('image_url'));
+            $result = $bit->saveWebImage($this->app->request->post('image_url'));
+
+            if ($result) {
+                echo json_encode($result);
+            }
         }
     }
 
@@ -101,8 +107,12 @@ class BitController extends AbstractController
             $bit->init(array(
                 'scribbit' => $scribbit
             ));
-            
-            $bit->saveUploadedImage();
+
+            $result = $bit->saveUploadedImage();
+
+            if ($result) {
+                echo json_encode($result);
+            }
         }
     }
 
