@@ -3,14 +3,16 @@
 namespace Controllers;
 
 use Config;
-use Pimple;
 use Controllers\AbstractController;
+use Models\ScribbitModel;
+use Pimple;
 
 class ScribbitController extends AbstractController
 {
     public function init(Pimple $di)
     {
         $this->model = $di['ScribbitModel'];
+        $this->di = $di;
     }
 
     public function find($name)
@@ -21,7 +23,7 @@ class ScribbitController extends AbstractController
 
             $files = array();
             $i = 1; // add this to the end of the filectime value, in case files have the same filectime
-            foreach (glob(APP_PATH . Config::SCRIBBITS_DIRECTORY . "$dir_name/*") as $file) {
+            foreach (glob(APP_PATH . Config::SCRIBBITS_DIRECTORY . "$dir_name/*.{md}", GLOB_BRACE) as $file) {
                 $d                     = date(Config::DATE_FORMAT, filectime($file));
                 $files[$d . "$i"]['contents'] = htmlspecialchars(file_get_contents($file));
                 $files[$d . "$i"]['name']     = basename($file);
@@ -50,7 +52,16 @@ class ScribbitController extends AbstractController
     public function post()
     {
         if ($this->session->isAuthed()) {
-            $this->model->create($this->app->request->post('scribbit'));
+            $scribbit = new ScribbitModel($this->di);
+            $name = $this->app->request->post('scribbit');
+            
+            $result = $scribbit->create($name);
+
+            if ($result) {
+                echo json_encode($result);
+            } else {
+                $this->app->halt(500, json_encode(array('status' => "creating $name failed")));
+            }
         }
     }
 
@@ -60,19 +71,19 @@ class ScribbitController extends AbstractController
             $old = $this->app->request->put('pk');
             $new = $this->app->request->put('value');
 
-            $res = $this->model->update($old, $new);
+            $scribbit = new ScribbitModel($this->di);
 
-            if ($res !== false) {
-                $response = array ('old' => $old, 'new' => $res, 'display' => $new);
-                echo json_encode($response);
-            }
+            $result = $scribbit->update($old, $new);
+
+            echo json_encode($result);
         }
     }
 
     public function delete($name)
     {
         if ($this->session->isAuthed()) {
-            $this->model->delete($name);
+            $scribbit = new ScribbitModel($this->di);
+            $scribbit->delete($name);
         }
     }
 

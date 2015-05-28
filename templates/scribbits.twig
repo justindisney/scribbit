@@ -1,30 +1,30 @@
 {% include 'header.twig' %}
 <h1>
-<form action="scribbit" method="post">
+    <form method="POST">
     <div class="input-group">
-        <input name="scribbit" type="text" class="form-control input-lg" placeholder="New Scribbit...">
+        <input id="newScribbit" type="text" class="form-control input-lg" placeholder="New Scribbit...">
         <span class="input-group-btn">
-            <button class="btn btn-success btn-lg" type="submit"><span class="glyphicon glyphicon-plus"></span></button>
+            <button class="btn btn-success btn-lg new-scribbit" type="submit" data-url="{{urlFor('scribbit-new')}}"><span class="glyphicon glyphicon-plus"></span></button>
         </span>
     </div>
-</form>
+    </form>
 </h1>
 
 <p>&nbsp;</p>
 
-<ul class="list-unstyled list-group">
+<ul class="list-unstyled list-group scribbits">
     {% for scribbit in scribbits %}
     <li class="list-group-item clearfix scribbit" data-scribbit="{{scribbit.name}}">
         <h3 class="pull-left">
-            <a href="#" class="btn btn-default edit" title="edit"><span class="glyphicon glyphicon-pencil"></span></a>
+            <button class="btn btn-default edit" title="edit"><span class="glyphicon glyphicon-pencil"></span></button>
             <a href="{{urlFor('scribbit-get', {'scribbit': scribbit.name})}}" data-pk="{{scribbit.name}}">{{scribbit.display_name}}</a>
             <small class="text-muted">
                 ({{scribbit.bit_count}} {% if scribbit.bit_count == 1 %} Bit) {% else %} Bits) {% endif %}
             </small>
         </h3>
         <div class="btn-group pull-right" role="group">
-            <button class="btn btn-default btn-lg download" title="download" data-url="{{urlFor('scribbit-download', {'scribbit': scribbit.name})}}" >
-                <span class="glyphicon glyphicon-download"></span>
+            <button class="btn btn-default btn-lg download {% if scribbit.bit_count < 1 %} disabled {% endif %}" title="download" data-url="{{urlFor('scribbit-download', {'scribbit': scribbit.name})}}" >
+                <span class="glyphicon glyphicon-save"></span>
             </button>
             <button class="btn btn-default btn-lg delete" title="delete" data-url="{{urlFor('scribbit-delete', {'scribbit': scribbit.name})}}">
                 <span class="glyphicon glyphicon-remove"></span>
@@ -32,5 +32,23 @@
         </div>
     </li>
     {% endfor %}
+    
+    <li class="list-group-item clearfix scribbit-template" data-scribbit="SCRIBBIT_NAME">
+        <h3 class="pull-left">
+            <button class="btn btn-default edit" title="edit"><span class="glyphicon glyphicon-pencil"></span></button>
+            <a href="{{urlFor('scribbit-get', {'scribbit': 'SCRIBBIT_NAME'})}}" data-pk="SCRIBBIT_NAME">SCRIBBIT_DISPLAY_NAME</a>
+            <small class="text-muted">
+                (0 Bits)
+            </small>
+        </h3>
+        <div class="btn-group pull-right" role="group">
+            <button class="btn btn-default btn-lg download disabled" title="download" data-url="{{urlFor('scribbit-download', {'scribbit': 'SCRIBBIT_NAME'})}}" >
+                <span class="glyphicon glyphicon-save"></span>
+            </button>
+            <button class="btn btn-default btn-lg delete" title="delete" data-url="{{urlFor('scribbit-delete', {'scribbit': 'SCRIBBIT_NAME'})}}">
+                <span class="glyphicon glyphicon-remove"></span>
+            </button>
+        </div>
+    </li>
 </ul>
 {% include 'footer.twig' %}

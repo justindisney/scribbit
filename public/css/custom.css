@@ -37,6 +37,10 @@ button.help b {
     font-size: 1.75em
 }
 
+li.scribbit-template, div.bit-template {
+    display: none;
+}
+
 li.scribbit h3 {
     margin-top: 10px;
 }

@@ -3,11 +3,37 @@
 namespace Models;
 
 use Config;
+use Pimple;
 use ZipArchive;
+use Models\AbstractModel;
 
-class ScribbitModel
+class ScribbitModel extends AbstractModel
 {
     protected $fileGlob = '*.{md,jpg,jpeg,png,gif}';
+    protected $absoluteScribbitsPath;
+    protected $name;
+
+    public function __construct(Pimple $di)
+    {
+        parent::__construct($di);
+
+        $this->absoluteScribbitsPath = APP_PATH . Config::SCRIBBITS_DIRECTORY;
+    }
+
+    private function sanitizeName($name)
+    {
+        $ascii_name = iconv('UTF-8', 'ASCII//IGNORE', $name);
+        return preg_replace('/\W+/', '_-_', $ascii_name);
+    }
+
+    public function init($params = array())
+    {
+        if (isset($params['name'])) {
+            $this->name = $this->sanitizeName($params['name']);
+        } else {
+            $this->name = Config::LOST_AND_FOUND;
+        }
+    }
 
     public function getBitCount($path)
     {
@@ -24,13 +50,13 @@ class ScribbitModel
     public function all()
     {
         $scribbits = array();
-        $path      = APP_PATH . Config::SCRIBBITS_DIRECTORY;
-        foreach (glob($path . "*", GLOB_ONLYDIR) as $scribbit) {
+
+        foreach (glob($this->absoluteScribbitsPath . "*", GLOB_ONLYDIR) as $scribbit) {
             if (basename($scribbit) != Config::LOST_AND_FOUND) {
                 $t                             = filectime($scribbit);
                 $scribbits[$t]['name']         = basename($scribbit);
                 $scribbits[$t]['display_name'] = preg_replace('/_-_/', ' ', basename($scribbit));
-                $scribbits[$t]['bit_count']    = $this->getBitCount("$scribbit/*");
+                $scribbits[$t]['bit_count']    = $this->getBitCount("$scribbit/*.{md}");
             }
         }
 
@@ -41,7 +67,7 @@ class ScribbitModel
 
     public function download($name)
     {
-        $path    = APP_PATH . Config::SCRIBBITS_DIRECTORY . $name;
+        $path    = $this->absoluteScribbitsPath . $name;
         $zipFile = $path . "/$name.zip";
 
         $zip = new ZipArchive;
@@ -65,34 +91,49 @@ class ScribbitModel
 
     public function create($scribbit)
     {
-        $ascii_name = iconv('UTF-8', 'ASCII//IGNORE', $scribbit);
-        $name       = preg_replace('/\W+/', '_-_', $ascii_name);
+        $newName = $this->sanitizeName($scribbit);
+        $newDirectory = $this->absoluteScribbitsPath . $newName;
 
-        mkdir(APP_PATH . Config::SCRIBBITS_DIRECTORY . $name);
+        if (!file_exists($newDirectory)) {
+            mkdir($newDirectory);
+
+            return array(
+                'scribbit_name' => $newName,
+                'scribbit_display_name' => preg_replace('/_-_/', ' ', $newName)
+            );
+        }
+
+        return false;
     }
 
     public function update($old, $new)
     {
-        $ascii_name = iconv('UTF-8', 'ASCII//IGNORE', $new);
-        $name       = preg_replace('/\W+/', '_-_', $ascii_name);
+        $cleanNew = $this->sanitizeName($new);
 
-        if (rename(APP_PATH . Config::SCRIBBITS_DIRECTORY . $old, APP_PATH . Config::SCRIBBITS_DIRECTORY . $name)) {
-            return $name;
+        if (file_exists($this->absoluteScribbitsPath . $cleanNew)) {
+            $this->app->halt(500, json_encode(array('status' => "Scribbit $cleanNew exists")));
+        }
+
+        if (rename($this->absoluteScribbitsPath . $old, $this->absoluteScribbitsPath . $cleanNew)) {
+            return array ('old' => $old, 'new' => $cleanNew, 'display' => $new);
         } else {
-            return false;
+            $this->app->halt(500, json_encode(array('status' => "Scribbit renaming failed")));
         }
     }
 
     public function delete($scribbit)
     {
-        $path = APP_PATH . Config::SCRIBBITS_DIRECTORY . $scribbit;
+        $path = $this->absoluteScribbitsPath . $scribbit;
 
-        foreach ($this->getBits("$path/" . $this->fileGlob) as $bit) {
-            if (unlink($bit)) {
-//                var_dump("success"); die;
-            } else {
-//                var_dump($bit); die;
-            }
+        foreach (glob("$path/*.md") as $file) {
+            $bit = new BitModel($this->di);
+
+            $bit->init(array(
+                'scribbit' => $scribbit,
+                'filename' => basename($file)
+            ));
+
+            $bit->delete();
         }
 
         rmdir($path);

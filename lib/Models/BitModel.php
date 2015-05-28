@@ -3,9 +3,12 @@
 namespace Models;
 
 use Config;
+use GuzzleHttp\Client;
+use Models\AbstractModel;
+use Twig_Extension_StringLoader;
 use ZipArchive;
 
-class BitModel
+class BitModel extends AbstractModel
 {
     protected $absolutePath;
     protected $content;
@@ -13,7 +16,7 @@ class BitModel
     protected $scribbit;
     protected $scribbitPath;
 
-    public function __construct($params = array())
+    public function init($params = array())
     {
         if (isset($params['filename'])) {
             $this->filename = $params['filename'];
@@ -43,7 +46,20 @@ class BitModel
 
     public function saveContent()
     {
-        file_put_contents($this->absolutePath, $this->content);
+        $results = array();
+
+        if (file_put_contents($this->absolutePath, $this->content) !== false) {
+            $results['date']             = date(Config::DATE_FORMAT, filectime($this->absolutePath));
+            $results['content']          = htmlspecialchars(file_get_contents($this->absolutePath));
+            $results['name']             = $this->filename;
+            $results['scribbit']         = $this->scribbit;
+
+            // The bit may have some Twig syntax in it (like baseUrl() for image paths),
+            // so have twig render the string the same as it would a variable in a Twig template
+            $results['rendered_content'] = $this->app->view->render("string.twig", array("__str__" => $results['content']));
+
+            return $results;
+        }
     }
 
     public function download()
@@ -67,7 +83,90 @@ class BitModel
 
     public function delete()
     {
-        unlink($this->absolutePath);
+        $info     = pathinfo($this->absolutePath);
+        $dirName  = $info['dirname'];
+        $fileName = $info['filename'];
+
+        // remove any symlinks to image files
+        foreach (glob(APP_PATH . "public/img/$fileName.*") as $file) {
+            unlink($file);
+        }
+
+        // now remove the actual bit files
+        foreach (glob("$dirName/$fileName.*") as $file) {
+            unlink($file);
+        }
+    }
+
+    public function saveWebImage($fromUrl)
+    {
+        $urlInfo  = pathinfo($fromUrl);
+        $fileInfo = pathinfo($this->filename);
+
+        // Use the same filename as the bit filename,
+        // but use the extension from the image being downloaded (after cleaning it up)
+        preg_match("/^([a-zA-Z0-9]*)/", $urlInfo['extension'], $matches);
+        $imgFile = $this->scribbitPath . $fileInfo['filename'] . "." . $matches[0];
+
+        try {
+            $client = new Client();
+            $client->get($fromUrl, ['verify' => false, 'save_to' => $imgFile]);
+
+            // Create a symlink in the web-accessible directory to the actual image file
+            $source = APP_PATH . "public/img/" . basename($imgFile);
+
+            $output = "";
+            $cmd    = "ln -s $imgFile $source";
+            $res    = exec($cmd, $output);
+
+            // This is the markdown to go in the new bit file,
+            // which contains a link to the new image file
+            $content = "![image]({{baseUrl()}}/img/" . basename($imgFile) . ")";
+
+            $this->setContent($content);
+            return $this->saveContent();
+        } catch (Exception $e) {
+            // Log the error or something
+            return false;
+        }
+    }
+
+    public function saveUploadedImage()
+    {
+        $fileInfo = pathinfo($this->filename);
+        $storage  = new \Upload\Storage\FileSystem($this->scribbitPath);
+        $file     = new \Upload\File('uploadedImage', $storage);
+        $ext      = $file->getExtension();
+
+        // Use the same filename as the bit filename,
+        // but use the extension from the image being downloaded (after cleaning it up)
+        preg_match("/^([a-zA-Z0-9]*)/", $ext, $matches);
+        $imgFile = $this->scribbitPath . $fileInfo['filename'] . "." . $matches[0];
+        $file->setName($fileInfo['filename']);
+
+        try {
+            // Success!
+            $file->upload();
+
+            // Create a symlink in the web-accessible directory to the actual image file
+            $source = APP_PATH . "public/img/" . basename($imgFile);
+
+            $output = "";
+            $cmd    = "ln -s $imgFile $source";
+            $res    = exec($cmd, $output);
+
+            // This is the markdown to go in the new bit file,
+            // which contains a link to the new image file
+            $content = "![image]({{baseUrl()}}/img/" . basename($imgFile) . ")";
+
+            $this->setContent($content);
+            return $this->saveContent();
+        } catch (\Exception $e) {
+            // Fail!
+            $errors = $file->getErrors();
+
+            return false;
+        }
     }
 
 }

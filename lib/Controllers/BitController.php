@@ -8,29 +8,35 @@ use Models\BitModel;
 
 class BitController extends AbstractController
 {
+
+    protected $di;
+
     public function init(Pimple $di)
     {
-
+        $this->di = $di;
     }
 
     public function post()
     {
         if ($this->session->isAuthed()) {
-            $bit = new BitModel(array(
+            $bit = new BitModel($this->di);
+            $bit->init(array(
                 'scribbit' => $this->app->request->post('scribbit')
             ));
-
             $bit->setContent($this->app->request->post('content'));
-            $bit->saveContent();
+            $result = $bit->saveContent();
 
-            return $bit->getFileName();
+            if ($result) {
+                echo json_encode($result);
+            }
         }
     }
 
     public function put()
     {
         if ($this->session->isAuthed()) {
-            $bit = new BitModel(array(
+            $bit = new BitModel($this->di);
+            $bit->init(array(
                 'scribbit' => $this->app->request->put('scribbit'),
                 'filename' => $this->app->request->put('bit')
             ));
@@ -45,7 +51,8 @@ class BitController extends AbstractController
     public function download($scribbit, $filename)
     {
         if ($this->session->isAuthed()) {
-            $bit = new BitModel(array(
+            $bit = new BitModel($this->di);
+            $bit->init(array(
                 'scribbit' => $scribbit,
                 'filename' => $filename
             ));
@@ -67,12 +74,45 @@ class BitController extends AbstractController
     public function delete($scribbit, $filename)
     {
         if ($this->session->isAuthed()) {
-            $bit = new BitModel(array(
+            $bit = new BitModel($this->di);
+            $bit->init(array(
                 'scribbit' => $scribbit,
                 'filename' => $filename
             ));
 
             $bit->delete();
+        }
+    }
+
+    public function saveWebImage($scribbit)
+    {
+        if ($this->session->isAuthed()) {
+            $bit = new BitModel($this->di);
+            $bit->init(array(
+                'scribbit' => $scribbit
+            ));
+
+            $result = $bit->saveWebImage($this->app->request->post('image_url'));
+
+            if ($result) {
+                echo json_encode($result);
+            }
+        }
+    }
+
+    public function saveUploadedImage($scribbit)
+    {
+        if ($this->session->isAuthed()) {
+            $bit = new BitModel($this->di);
+            $bit->init(array(
+                'scribbit' => $scribbit
+            ));
+
+            $result = $bit->saveUploadedImage();
+
+            if ($result) {
+                echo json_encode($result);
+            }
         }
     }
 

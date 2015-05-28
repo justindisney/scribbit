@@ -22,7 +22,9 @@ $app->view->parserOptions = array(
     'strict_variables' => false,
     'autoescape' => true
 );
-$app->view->parserExtensions = array(new \Slim\Views\TwigExtension());
+$app->view->parserExtensions = array(
+    new \Slim\Views\TwigExtension(),
+    new \Twig_Extension_StringLoader);
 
 $pimple = new Pimple();
 $pimple['app'] = $app;
@@ -72,8 +74,8 @@ $app->group('/scribbit', function () use ($pimple) {
 
     $pimple['app']->post('', function () use ($pimple) {
         $pimple['ScribbitController']->post();
-        $pimple['app']->redirect($pimple['app']->urlFor('home')); // refresh the page
-    });
+//        $pimple['app']->redirect($pimple['app']->urlFor('home')); // refresh the page
+    })->name('scribbit-new');
 
     $pimple['app']->put('/', function () use ($pimple) {
         $pimple['ScribbitController']->put();
@@ -92,6 +94,14 @@ $app->group('/bit', function () use ($pimple) {
     $pimple['app']->post('', function () use ($pimple) {
         $pimple['BitController']->post();
     })->name('bit-post');
+
+    $pimple['app']->post('/save-web-image/:scribbit', function ($scribbit) use ($pimple) {
+        $pimple['BitController']->saveWebImage($scribbit);
+    })->name('bit-save-web-image');
+
+    $pimple['app']->post('/upload-image/:scribbit', function ($scribbit) use ($pimple) {
+        $pimple['BitController']->saveUploadedImage($scribbit);
+    })->name('bit-upload-image');
 
     $pimple['app']->put('', function () use ($pimple) {
         $pimple['BitController']->put();

@@ -15,7 +15,9 @@
         "slim/slim": "2.*",
         "slim/views": "^0.1.3",
         "twig/twig": "1.*",
-        "pimple/pimple": "1.*"
+        "pimple/pimple": "1.*",
+        "guzzlehttp/guzzle": "~5.0",
+        "codeguy/upload": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "4.*"

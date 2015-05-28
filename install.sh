@@ -11,3 +11,4 @@ fi
 
 chmod -R 0777 scribbits/
 chmod -R 0777 templates/cache
+chmod -R 0777 public/img

@@ -11,27 +11,47 @@
     <div class="text-center editor-buttons">
         <button class="btn btn-success btn-xl btn-circle save" data-post-url="{{urlFor('bit-post')}}" data-put-url="{{urlFor('bit-put')}}"><span class="glyphicon glyphicon-ok"></span></button>
         <button class="btn btn-default btn-xl btn-circle cancel"><span class="glyphicon glyphicon-remove"></span></button>
-        <button class="btn btn-primary btn-xl btn-circle help" data-toggle="modal" data-target="#markdownModal"><b>?</b></button>
+        <button class="btn btn-primary btn-xl btn-circle upload" data-toggle="modal" data-target="#uploadModal"><span class="glyphicon glyphicon-picture"></span></button>
+        <button class="btn btn-info btn-xl btn-circle help" data-toggle="modal" data-target="#markdownModal"><b>?</b></button>
     </div>
 </div>
 
-{% for date, bit in bits %}
-<div class="panel panel-default custom" data-bit="{{bit.name}}" data-scribbit="{{scribbit}}">
+<div class="bit-wrapper">
+    {% for date, bit in bits %}
+    <div class="panel panel-default custom" data-bit="{{bit.name}}" data-scribbit="{{scribbit}}">
+        <div class="panel-heading custom">
+            <h3 class="pull-left">{{date}}</h3>
+            <div class="btn-group pull-right bit" role="group">
+                <button class="btn btn-default btn-lg edit" title="edit"><span class="glyphicon glyphicon-edit"></span></button>
+                <button class="btn btn-default btn-lg download" data-url="{{urlFor('bit-download', {'scribbit': scribbit, 'bit': bit.name})}}" title="download">
+                    <span class="glyphicon glyphicon-save"></span>
+                </button>
+                <button class="btn btn-default btn-lg delete" data-url="{{urlFor('bit-delete', {'scribbit': scribbit, 'bit': bit.name})}}" title="delete">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </button>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="panel-body markdown" data-source="{{include(template_from_string(bit.contents))}}"></div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="panel panel-default custom bit-template" data-bit="BIT_NAME" data-scribbit="SCRIBBIT">
     <div class="panel-heading custom">
-        <h3 class="pull-left">{{date}}</h3>
+        <h3 class="pull-left">DATE</h3>
         <div class="btn-group pull-right bit" role="group">
             <button class="btn btn-default btn-lg edit" title="edit"><span class="glyphicon glyphicon-edit"></span></button>
-            <button class="btn btn-default btn-lg download" data-url="{{urlFor('bit-download', {'scribbit': scribbit, 'bit': bit.name})}}" title="download">
-                <span class="glyphicon glyphicon-download"></span>
+            <button class="btn btn-default btn-lg download" data-url="{{urlFor('bit-download', {'scribbit': 'SCRIBBIT', 'bit': 'BIT_NAME'})}}" title="download">
+                <span class="glyphicon glyphicon-save"></span>
             </button>
-            <button class="btn btn-default btn-lg delete" data-url="{{urlFor('bit-delete', {'scribbit': scribbit, 'bit': bit.name})}}" title="delete">
+            <button class="btn btn-default btn-lg delete" data-url="{{urlFor('bit-delete', {'scribbit': 'SCRIBBIT', 'bit': 'BIT_NAME'})}}" title="delete">
                 <span class="glyphicon glyphicon-remove"></span>
             </button>
         </div>
         <div class="clearfix"></div>
     </div>
-    <div class="panel-body markdown" data-source="{{bit.contents}}"></div>
+    <div class="panel-body markdown" data-source="CONTENT">HTML_CONTENT</div>
 </div>
-{% endfor %}
 {% include 'modals.twig' %}
 {% include 'footer.twig' %}
