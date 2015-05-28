@@ -234,7 +234,7 @@ $(document).ready(function () {
         editor.focus();
     });
 
-    $("div.bit .delete").click(function () {
+    $(document).on('click', 'div.bit .delete', function () {
         var url = $(this).data("url");
         var bitPanel = $(this).parents("div.panel");
 
@@ -266,11 +266,11 @@ $(document).ready(function () {
         }});
     });
 
-    $("div.bit .download").click(function () {
+    $(document).on('click', 'div.bit .download', function () {
         window.location = $(this).data("url");
     });
 
-    $("div.bit .edit").click(function () {
+    $(document).on('click', 'div.bit .edit', function () {
         var bitPanel = $(this).parents("div.panel");
         var bit = bitPanel.data("bit");
         $("#bit").val(bit);
