@@ -36,8 +36,6 @@ If installed correctly, a login screen should appear. Use the credentials that w
 
 At the moment, caching for the twig templates is disabled, due to the possibility that the cache files may not be removable from the command-line.
 
-File/image upload functionality is coming soon.
-
 ## How to Contribute
 
 ### Pull Requests
