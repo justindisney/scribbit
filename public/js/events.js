@@ -50,8 +50,12 @@ var editableParams = {
 }
 
 $(document).ready(function () {
-    $.fn.editable.defaults.mode = 'inline';
-    $.fn.editable.defaults.ajaxOptions = {type: "PUT"};
+    if ($.fn.editable) {
+        $.fn.editable.defaults.mode = 'inline';
+        $.fn.editable.defaults.ajaxOptions = {type: "PUT"};
+        
+        $('li.scribbit h3 a').editable(editableParams);
+    }
 
     $('button.new-scribbit').click(function (e) {
         e.preventDefault();
@@ -92,8 +96,6 @@ $(document).ready(function () {
             }
         });
     });
-
-    $('li.scribbit h3 a').editable(editableParams);
 
     $(document).on('click', 'li.scribbit h3 button.edit', function (e) {
         e.stopPropagation();
@@ -178,6 +180,12 @@ $(document).ready(function () {
         $('#bit-editor').keyup();
         editor.clearSelection();
         editor.focus();
+    });
+
+    $("div.editor-buttons button.help").click(function () {
+        if ($('img.deferred').attr('src') == '#') {
+            $('img.deferred').attr('src', $('img.deferred').data('src'));
+        }
     });
 
     function createImageBit(data) {

@@ -35,7 +35,8 @@ class ScribbitController extends AbstractController
             $this->app->render('scribbit.twig', array(
                 'scribbit' => $name,
                 'scribbit_display' => preg_replace('/_-_/', ' ', $name),
-                'bits' => $files
+                'bits' => $files,
+                'load_bit_assets' => true
             ));
         } else {
             $this->app->redirect('/');
@@ -91,7 +92,8 @@ class ScribbitController extends AbstractController
     {
         if ($this->session->isAuthed()) {
             $this->app->render('scribbits.twig', array(
-                'scribbits' => $this->model->all()
+                'scribbits' => $this->model->all(),
+                'load_scribbit_assets' => true
             ));
         } else {
             $this->app->render('login.twig', array(
